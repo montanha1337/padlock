@@ -10,6 +10,9 @@ const router = express.Router()
     const descricao ='Acessado backend!!!'
     res.json({descricao})
   })
+  router.get('/rotasparaimportacao', async (req, res, ) => {
+    res.redirect('https://drive.google.com/drive/folders/1Dn4XIr-qcVQpSqlT6aqseXfNscRXqllu?usp=sharing')
+  })
 
 
 router.get('/testeToken', async (req, res, ) => {
