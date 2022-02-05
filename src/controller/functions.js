@@ -1,8 +1,8 @@
 import Jwt from 'jsonwebtoken'
-import Chave from '../model/connect'
 import bcrypt from 'bcrypt'
 
 var salt = bcrypt.genSaltSync(10)
+const secreto = 'e27b5c71f4a74a0a6a484e3d00fa5489f720938d'
 
 function padraoErro(mensagem){
     var erro= Object()
@@ -13,11 +13,11 @@ function padraoErro(mensagem){
 
 
 function gerajwt(iduser){
-    const token = Jwt.sign({iduser}, Chave.secreto, {expiresIn: "30 days" });
+    const token = Jwt.sign({iduser}, secreto, {expiresIn: "30 days" });
     return token
 }
 function verificajwt(token){
-    var verificado = Jwt.verify(token,Chave.secreto, (err, decoded) =>{
+    var verificado = Jwt.verify(token,secreto, (err, decoded) =>{
         if(decoded) {
         return decoded.iduser
         }

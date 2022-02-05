@@ -1,5 +1,5 @@
 import express  from  'express'
-import Funcao   from  './functions'
+import Funcao   from  '../controller/functions'
 
 
 const router = express.Router()
