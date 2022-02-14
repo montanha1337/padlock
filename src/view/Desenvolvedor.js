@@ -20,8 +20,8 @@ const router = express.Router()
 
 router.get('/testeToken', async (req, res, ) => {
   const Bearer = req.body.token
-  const id= Funcao.verificajwt(Bearer) 
-  res.json(id)
+  const conteudo= Funcao.verificajwt(Bearer) 
+  res.json({conteudo})
 })
 
 
@@ -31,6 +31,15 @@ router.get('/AtualizaToken',async(req,res)=>{
  if(token== false){
   res.status(401).json({token:[]})
 }
+res.status(200).json({token})
+})
+
+router.get('/geraToken',async(req,res)=>{
+  const conteudo = req.body.informacao;
+  const token = await Funcao.gerajwt(conteudo)
+ if(token == false){
+  res.status(401).json({token:[]})
+}else
 res.status(200).json({token})
 })
 

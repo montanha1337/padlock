@@ -13,7 +13,7 @@ function padraoErro(mensagem){
 
 
 function gerajwt(iduser){
-    const token = Jwt.sign({iduser}, secreto, {expiresIn: "30 days" });
+    const token = Jwt.sign({iduser}, secreto, {expiresIn: "3 days" });
     return token
 }
 function verificajwt(token){
