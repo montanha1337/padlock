@@ -10,12 +10,12 @@ app.use(cors())
 class App{
   constructor(){
     this.server=express();
-   //  conexão com o banco id:root senha:admin
-   //  https://data.mongodb-api.com/app/data-nhsha/endpoint/data/beta
-    //mongoose.connect('mongodb+srv://root:<admin>@pixalock.5fnrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{
-     // useNewUrlParser: true,
-     // useUnifiedTopology: true,
-    //});
+    // conexão com o banco id:root senha:admin
+    // https://data.mongodb-api.com/app/data-nhsha/endpoint/data/beta
+    mongoose.connect('mongodb+srv://root:matheus@pixalock.5fnrf.mongodb.net/myFirstDatabase?retryWrites=true&w=majority',{
+      useNewUrlParser: true,
+      useUnifiedTopology: true,
+    });
 
     this.middlewares();
     this.routes();

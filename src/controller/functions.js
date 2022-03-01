@@ -13,13 +13,14 @@ function padraoErro(mensagem){
 
 
 function gerajwt(iduser){
-    const token = Jwt.sign({iduser}, secreto, {expiresIn: "3 days" });
+    const carga = iduser
+    const token = Jwt.sign({carga}, secreto, {expiresIn: "3 days" });
     return token
 }
 function verificajwt(token){
     var verificado = Jwt.verify(token,secreto, (err, decoded) =>{
         if(decoded) {
-        return decoded.iduser
+        return decoded.carga
         }
         return false
     } )
@@ -34,6 +35,9 @@ function atualizajwt(token){
         return text
 }
 
+function encripta(dado){
+    const token = Jwt.sign({dado}, secreto, {expiresIn: "500 days" });
+    return token
+}
 
-
-module.exports = {padraoErro, gerajwt, verificajwt,atualizajwt}
+module.exports = {padraoErro, gerajwt, verificajwt,atualizajwt,encripta}
