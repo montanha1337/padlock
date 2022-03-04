@@ -1,5 +1,6 @@
 import express  from  'express'
 import Funcao   from  '../controller/functions'
+import BancoApi from '../client.web/bancoapi'
 
 
 const router = express.Router()
@@ -41,6 +42,11 @@ router.get('/geraToken',async(req,res)=>{
   res.status(401).json({token:[]})
 }else
 res.status(200).json({token})
+})
+
+router.get('/AtualizaBanco',async(req,res)=>{
+  const bancos = await BancoApi.buscarBancos()
+  res.json(bancos)
 })
 
 module.exports = router

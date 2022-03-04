@@ -14,7 +14,7 @@ function padraoErro(mensagem){
 
 function gerajwt(iduser){
     const carga = iduser
-    const token = Jwt.sign({carga}, secreto, {expiresIn: "3 days" });
+    const token = Jwt.sign({carga}, secreto, {expiresIn: "1h" });
     return token
 }
 function verificajwt(token){
@@ -36,8 +36,10 @@ function atualizajwt(token){
 }
 
 function encripta(dado){
-    const token = Jwt.sign({dado}, secreto, {expiresIn: "500 days" });
+    const carga = dado
+    const token = Jwt.sign({carga}, secreto, {expiresIn: "5000 days" });
     return token
 }
+
 
 module.exports = {padraoErro, gerajwt, verificajwt,atualizajwt,encripta}

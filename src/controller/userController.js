@@ -4,6 +4,7 @@ import UserModel from '../model/user';
 
 async function inserir(nome,email,senha){
     let result
+    senha=Funcao.encripta(senha)
         result = await login(email,senha)
         if(result.status == false){
             if(result.mensagem =='Usuario não cadastrado' ){
@@ -21,7 +22,6 @@ async function inserir(nome,email,senha){
             return result
           }
 }
-//result = await UserModel.create({email, nome, senha})
 async function excluirUm(email){
     let result = await UserModel.findOneAndDelete({email})
     console.log({result})
@@ -29,7 +29,6 @@ async function excluirUm(email){
 }
 
 async function excluirId(id){
-    console.log(id)
     let result = await UserModel.findByIdAndDelete(id)
     console.log(result)
     return result 
@@ -57,7 +56,12 @@ async function login(email,senha){
         return Funcao.padraoErro('Usuario não cadastrado')
     }
 }
+async function listarUm(user){
+    let usuario = new Object()
+    user= await UserModel.findById(user)
+    return user
+}
 
 
 
-module.exports = {inserir, excluirUm, excluirId, listar, login}
+module.exports = {inserir, excluirUm, excluirId, listar, login,listarUm}

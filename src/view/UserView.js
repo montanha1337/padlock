@@ -51,7 +51,12 @@ router.post('/inserir',async (req,res)=>{
     
     res.status(200).json({"usuario deletado": deleta})
   })
-
+  router.post('/buscarUm',async (req,res)=>{
+    let id = req.body.id
+       let busca = await UserControl.listarUm(id)
+    
+    res.status(200).json(busca)
+  })
 
 
 module.exports = router
