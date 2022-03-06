@@ -1,4 +1,3 @@
-import Funcao from './functions'
 import BancoModel from '../model/Banco';
 import BancoApi from '../client.web/bancoapi'
 

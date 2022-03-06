@@ -1,5 +1,6 @@
 import express from 'express'
 import BancoControl from '../controller/BancoController'
+import ConfigControl from '../controller/config'
 
 const router = express.Router()
 
@@ -12,8 +13,8 @@ router.get('/inserir',async (req,res)=>{
   router.get('/listar',async (req,res)=>{
     let bancos = new Object() 
     bancos= await BancoControl.listar()
-    //bancos.tamanho = Config.tamanhoBanco()
-    if(bancos.tamanho == 316){
+    bancos.tamanhobd = await ConfigControl.totalBanco()
+    if(bancos.tamanho == bancos.tamanhobd){
     res.status(200).json(bancos.dados)
     }else{
       bancos.api = await BancoControl.inserir()
