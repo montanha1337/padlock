@@ -13,7 +13,7 @@ const router = express.Router()
     res.json({descricao})
   })
   router.get('/rotasparaimportacao', async (req, res, ) => {
-    res.redirect('https://drive.google.com/drive/folders/1qwFLk3gBIGYHZIlMwsk_FkEDkdB4oA3Z?usp=sharing')
+    res.redirect('https://drive.google.com/drive/folders/1-1Wf1jpu1xFKtdh2wmUPzpW1nrCAQgtA?usp=sharing')
   })
   router.get('/ferramentasDoDesenvolvedor', async (req, res, ) => {
     res.redirect('https://drive.google.com/drive/folders/15elduxagVHk_4bNguYmTWVMfVeGu3iLp?usp=sharing')
