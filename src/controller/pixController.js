@@ -8,6 +8,7 @@ function validaPix(pix,tipo){
     let valida = new Object()
     let aleatorio
     valida.pix = pix
+    valida.mensagem = "Pix Inválido."
     switch(tipo){
         case "cpf":
            valida.validador = Funcao.validaCpf(pix)
@@ -29,6 +30,10 @@ function validaPix(pix,tipo){
                 return valida
             }
             valida.validador = true
+            return valida
+        default:
+            valida.validador = false
+            valida.mensagem = "Tipo Inválido"
             return valida
     }
 }
@@ -58,12 +63,16 @@ async function inserir(user,emailUser,pix,banco,tipo){
     let buscaBanco
     let valida = validaPix(pix,tipo)
     if(valida.validador==false){
-        return Funcao.padraoErro("Pix Inválido")
+        return Funcao.padraoErro(valida.mensagem)
     }
     pix= await Funcao.encripta(pix)
     user =await Funcao.verificajwt(user)
     if(user==false){
         return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    valida = await PixModel.find({user,emailUser,banco})
+    if(valida.length>4){
+        return Funcao.padraoErro("Quantidade de pix cadastrados excede o limite para este banco.")
     }
     result = await PixModel.create({user,emailUser,tipo,pix,banco})
     buscaUser = await UserControl.listarUm(user)
@@ -149,7 +158,7 @@ async function excluirId(user,email,pix){
 async function editar(user,email,pixAntigo,pixNovo,tipo,banco){
     let valida = validaPix(pixNovo,tipo)
     if(valida.validador==false){
-        return Funcao.padraoErro("Pix Inválido")
+        return Funcao.padraoErro(valida.mensagem)
     }
     let pix = new Object()
     let buscaPix
