@@ -85,18 +85,24 @@ async function listar(user,emailUser){
     let buscaPix
     let buscaUser
     let buscaBanco
-    user = await Funcao.verificajwt(user)
-    if(user==false){
+    let userdescript = await Funcao.verificajwt(user)
+    if(userdescript==false){
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
-    buscaPix = await PixModel.find({user,emailUser})
+    buscaPix = await PixModel.find({userdescript,emailUser})
     pix.dados = buscaPix
     pix.tamanho = buscaPix.length
     pix.lista=buscaPix
     if(buscaPix[0]){
         for(let i = 0; i < pix.tamanho; i++){
             buscaUser = await UserControl.listarUm(user)
+            if(buscaUser.status==false){
+                return buscaUser
+            }
             buscaBanco = await BancoControl.listarUm(pix.dados[i].banco)
+            if(buscaBanco.status==false){
+                return buscaBanco
+            }
             pix.lista[i]= await organizaDados(buscaUser.nome,buscaUser.email,pix.dados[i].pix,pix.dados[i].tipo,buscaBanco.nome,buscaBanco.code,buscaBanco.fullNome)
         }
         return pix.lista
@@ -190,10 +196,13 @@ async function editar(user,email,pixAntigo,pixNovo,tipo,banco){
     }
 
 }
-function teste(pix,tipo){
+function testePix(pix,tipo){
     pix= validaPix(pix,tipo)
+    if(pix.validador == true){
+        pix.mensagem = "Pix válido"
+    }
     return pix
 }
 
 
-module.exports = {inserir,listar,listarUm,excluirId,editar,teste}
+module.exports = {inserir,listar,listarUm,excluirId,editar,testePix}

@@ -5,7 +5,7 @@ import ConfigControl from '../controller/config'
 const router = express.Router()
 
 router.post('/inserir',async (req,res)=>{
-    const idUser = req.body.token
+    const idUser = req.headers.authorization.replace(/^Bearer\s/, '');
     const email = req.body.email
     const pix = req.body.pix
     const idBanco = req.body.idBanco
@@ -18,7 +18,7 @@ router.post('/inserir',async (req,res)=>{
     }
   })
 router.post('/listar',async (req,res)=>{
-  const token = req.body.token
+  const token = req.headers.authorization.replace(/^Bearer\s/, '');
   const email = req.body.email
   let listar =await PixControl.listar(token,email)
   if(listar.status == false){
@@ -28,7 +28,7 @@ router.post('/listar',async (req,res)=>{
   }
 })
 router.post('/listarum',async (req,res)=>{
-  const token = req.body.token
+  const token = req.headers.authorization.replace(/^Bearer\s/, '');
   const email = req.body.email
   const pix   = req.body.pix
   let listar =await PixControl.listarUm(token,email,pix)
@@ -39,7 +39,7 @@ router.post('/listarum',async (req,res)=>{
   }
 })
 router.delete('/deletar',async (req,res)=>{
-  const token = req.body.token
+  const token = req.headers.authorization.replace(/^Bearer\s/, '');
   const email = req.body.email
   const pix   = req.body.pix
   let listar =await PixControl.excluirId(token,email,pix)
@@ -50,7 +50,7 @@ router.delete('/deletar',async (req,res)=>{
   }
 })
 router.put('/editar',async (req,res)=>{
-  const token = req.body.token
+  const token = req.headers.authorization.replace(/^Bearer\s/, '');
   const email = req.body.email
   const pixAntigo   = req.body.pixAntigo
   const pixNovo = req.body.pixNovo
@@ -67,7 +67,7 @@ router.put('/editar',async (req,res)=>{
 router.post('/validapix',async (req,res)=>{
   const pix   = req.body.pix
   const tipo  = req.body.tipo
-  let listar =await PixControl.teste(pix,tipo)
+  let listar =await PixControl.testePix(pix,tipo)
       
     res.status(200).json({listar})
   

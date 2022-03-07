@@ -1,12 +1,19 @@
 import {Schema, model} from 'mongoose'
-const ContatoSchema = new Schema({
-  id: String,
-  IdUser: {
-    type: Schema.Types.ObjectId,
-    ref: 'User'
+
+const PixSchema = new Schema({
+  IdUser:{
+    type: Schema.Types.ObjectId, 
+    ref: 'contatos'
   },
+    pix:String,
+    tipo:String
+})
+
+
+const ContatoSchema = new Schema({
+  IdUser: String,
+  email:String,
   nome: String,
-  banco:String,
-  pix:String,
+  pix:[PixSchema],
 })
 export default model('Contato', ContatoSchema);

@@ -46,13 +46,13 @@ router.post('/inserir',async (req,res)=>{
     }
   })
   router.delete('/excluirId',async (req,res)=>{
-    let id = req.body.id
+    let id = req.headers.authorization.replace(/^Bearer\s/, '');
        let deleta = await UserControl.excluirId(id)
     
     res.status(200).json({"usuario deletado": deleta})
   })
   router.post('/buscarUm',async (req,res)=>{
-    let id = req.body.id
+    let id = req.headers.authorization.replace(/^Bearer\s/, '');
        let busca = await UserControl.listarUm(id)
     
     res.status(200).json(busca)

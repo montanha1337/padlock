@@ -8,7 +8,7 @@ async function inserir(nome,email,senha){
         result = await login(email,senha)
         if(result.status == false){
             if(result.mensagem =='Usuario não cadastrado' ){
-                //caso não tenha logado mas anão tem cadastrado
+                //caso não tenha cadastro
                 result = await UserModel.create({email, nome, senha})
                 result = await login(email,senha)
                 console.log(result)
@@ -28,8 +28,12 @@ async function excluirUm(email){
     return result 
 }
 
-async function excluirId(id){
-    let result = await UserModel.findByIdAndDelete(id)
+async function excluirId(user){
+    user =await Funcao.verificajwt(user)
+    if(user==false){
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    let result = await UserModel.findByIdAndDelete(user)
     console.log(result)
     return result 
 }
@@ -57,8 +61,12 @@ async function login(email,senha){
     }
 }
 async function listarUm(user){
-    let usuario = new Object()
+    user =await Funcao.verificajwt(user)
+    if(user==false){
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
     user= await UserModel.findById(user)
+    console.log(user)
     return user
 }
 
