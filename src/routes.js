@@ -13,6 +13,7 @@ const routes = new Router();
 routes.use('/documentacao',swaggerUiExpress.serve,swaggerUiExpress.setup(swaggerDocs))
 //web
 routes.use('/web',(req,res)=>{ res.sendfile(__dirname+'/view/PaginaErro.html')})
+routes.use('/web/dev',(req,res)=>{ res.sendfile(__dirname+'/view/PaginaWeb.html')})
 //Api
 
 routes.use('/desenvolvimento',Dev) //Rota com com testes unitarios e ferramentas para o desenvolvedor

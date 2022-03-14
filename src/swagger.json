@@ -1,9 +1,8 @@
 {
     "openapi":"3.0.0",
     "info":{
-        "title": "Api ara salvar pix",
-        "desscription":"Essa api tem como armazenar as chaves pix.",
-        "termsOfService":"http://localhost:8080||",
+        "title": "Api para salvar pix",
+        "description":"Essa api tem como armazenar as chaves pix.",
         "version":"1.0.0"
     },
     "servers":[
