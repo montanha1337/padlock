@@ -7,6 +7,7 @@ router.post('/inserir',async (req,res)=>{
     const email = req.body.email
     const nome = req.body.nome
     const senha = req.body.senha
+    console.log(email,nome, senha)
     let inserir = await UserControl.inserir(nome,email,senha)
 
     if(inserir.status == false){
@@ -25,7 +26,7 @@ router.post('/inserir',async (req,res)=>{
     res.status(200).json({encripta})
   })
 
-  router.get('/login',async (req,res)=>{
+  router.post('/login',async (req,res)=>{
     const email = req.body.email
     const senha = req.body.senha
     let login = await UserControl.login(email,senha)
@@ -51,11 +52,20 @@ router.post('/inserir',async (req,res)=>{
     
     res.status(200).json({"usuario deletado": deleta})
   })
-  router.post('/buscarUm',async (req,res)=>{
+  router.get('/buscarUm',async (req,res)=>{
     let id = req.headers.authorization.replace(/^Bearer\s/, '');
        let busca = await UserControl.listarUm(id)
     
     res.status(200).json(busca)
+  })
+  router.post('/senha',async (req,res)=>{
+    const senha = req.body.senha
+    let login = await UserControl.testeSenha(senha)
+    if(login.status == false){
+      res.status(400).json(login.mensagem)
+    }else{    
+      res.status(200).json(login)
+    }
   })
 
 

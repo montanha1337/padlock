@@ -4,12 +4,15 @@ import UserModel from '../model/user';
 
 async function inserir(nome,email,senha){
     let result
-    senha=Funcao.encripta(senha)
-        result = await login(email,senha)
+    senha=await testeSenha(senha)
+    if(senha.status==false){
+        return Funcao.padraoErro(senha.mensagem)
+    }
+        result = await login(email,senha.senhacripta)
         if(result.status == false){
             if(result.mensagem =='Usuario não cadastrado' ){
                 //caso não tenha cadastro
-                result = await UserModel.create({email, nome, senha})
+                result = await UserModel.create({email, nome, senha:senha.senhacripta})
                 result = await login(email,senha)
                 console.log(result)
                 return result
@@ -50,7 +53,16 @@ async function login(email,senha){
     let token
     let result = await UserModel.findOne({email})
     if(result){
+        result.senha = await Funcao.verificajwt(result.senha)
+        if(result.senha.status==false){
+            return Funcao.padraoErro("senha expirou!!!")
+        }
         if(result.senha==senha){
+            senha= await testeSenha(senha)
+            if(senha.status==false){
+                return Funcao.padraoErro(senha.mensagem)
+            }
+            await UserModel.findByIdAndUpdate({_id:result._id},{senha:senha.senhacripta})
             token = await Funcao.gerajwt(result._id)
             return {token}
         }else{
@@ -69,7 +81,16 @@ async function listarUm(user){
     console.log(user)
     return user
 }
+async function testeSenha(senha){
+    console.log(senha)
+    senha = await Funcao.validaSenha(senha)
+    if(senha.status==false){
+        return Funcao.padraoErro("Senha inválida")
+    }
+    return senha
+}
 
 
 
-module.exports = {inserir, excluirUm, excluirId, listar, login,listarUm}
+
+module.exports = {inserir, excluirUm, excluirId, listar, login,listarUm,testeSenha}

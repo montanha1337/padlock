@@ -23,6 +23,7 @@
     "sequelize": "^6.6.5",
     "sequelize-cli": "^6.2.0",
     "sucrase": "^3.16.0",
+    "swagger-ui-express": "^4.3.0",
     "validar-telefone": "^0.1.0"
   },
   "devDependencies": {

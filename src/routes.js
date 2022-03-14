@@ -3,10 +3,14 @@ import Dev from './view/DesenvolvedorRoutes'
 import User from './view/UserView'
 import Pix from './view/PixView'
 import Banco from './view/BancoView'
-import Contato from './view/ContatoView'
+import Contato from './view/ContatoView';
+import swaggerUiExpress from 'swagger-ui-express';
+import swaggerDocs from './swagger.json';
 
 const routes = new Router();
 //olhar o final da rota 
+//documentação
+routes.use('/documentacao',swaggerUiExpress.serve,swaggerUiExpress.setup(swaggerDocs))
 //web
 routes.use('/web',(req,res)=>{ res.sendfile(__dirname+'/view/PaginaErro.html')})
 //Api

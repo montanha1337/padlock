@@ -23,6 +23,12 @@ async function gerajwt(iduser){
     const token = Jwt.sign({carga}, secreto, {expiresIn: "1h" });
     return token
 }
+async function geraSenha(senha){
+    const carga = senha
+    const secreto = await secretoFuncao()
+    const token = Jwt.sign({carga}, secreto, {expiresIn: "2 days" });
+    return token
+}
 async function verificajwt(token){
     const secreto = await secretoFuncao()
     var verificado = Jwt.verify(token,secreto, (err, decoded) =>{
@@ -166,10 +172,24 @@ function validaEmail(email){
 }
 
 
-function validaSenha(senha){
+async function validaSenha(senha){
     let valida = new Object()
-    valida.retorno = false
-    return valida
+    valida.maiuscula=senha.toUpperCase()
+    valida.senha= senha
+    valida.especial=true
+    if(senha.length>=8){
+        for(let i = 0; i < senha.length; i++){
+            if(senha[i]==1||senha[i]==2||senha[i]==3||senha[i]==4||senha[i]==5||senha[i]==6||senha[i]==7||senha[i]==8||senha[i]==9||senha[i]==0){
+                if(valida.especial==true){
+                    if(senha[i] == valida.maiuscula[i]){
+                        valida.cripto= await geraSenha(senha)
+                        return {senha:valida.senha,senhacripta:valida.cripto,valida:true}
+                    }
+                }
+            }
+        }
+    }
+    return padraoErro("senha inválida")
 }
 
 
