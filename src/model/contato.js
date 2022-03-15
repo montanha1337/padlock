@@ -1,19 +1,19 @@
-import {Schema, model} from 'mongoose'
+import { Schema, model } from 'mongoose'
 
 const PixSchema = new Schema({
-  IdUser:{
-    type: Schema.Types.ObjectId, 
+  IdUser: {
+    type: Schema.Types.ObjectId,
     ref: 'contatos'
   },
-    pix:String,
-    tipo:String
+  pix: String,
+  tipo: String
 })
 
 
 const ContatoSchema = new Schema({
   IdUser: String,
-  email:String,
+  email: String,
   nome: String,
-  pix:[PixSchema],
+  pix: [PixSchema],
 })
 export default model('Contato', ContatoSchema);

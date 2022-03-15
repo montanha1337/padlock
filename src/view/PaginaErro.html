@@ -1,239 +1,301 @@
 <!DOCTYPE html>
 <html>
+
 <head>
-<meta charset="UTF-8"/>
-<title>PadLock</title>
+  <meta charset="UTF-8" />
+  <title>PadLock</title>
 </head>
 <style>
- @charset "UTF-8";
+  @charset "UTF-8";
 
-body{
-	margin:0;
-	color:#05a;
-	font:600 16px/18px 'Open Sans',sans-serif;
-}
-
-a{
-  text-decoration:none;
-  color:rgb(0,0,0);
-  font-family:sans-serif;
-  font-weight:bold;
-  text-shadow:1.5px 2px 0 rgba(0,0,0,.2);
-  transition:color linear .4s; 
-  -webkit-transition:color linear .4s; 
-  -moz-transition:color linear .4s; 
-}
-
-a:hover{
-  color:#05a;
-}
-
-header{
-  background:rgb(240,240,240);
-  width:100%;
-  height:80px;
-  position:absolute;
-  top:0;
-  left:0;
-  border-bottom:3px solid #05a;
-  z-index:100;
-}
-
-nav{
-  padding:20px;
-  float:left;
-}
-
-#responsive-menu{
- width:40px;
- height:40px;
- display:none;
- border:4px solid #05a;
- background-image:url(https://s3-us- west-2.amazonaws.com/s.cdpn.io/65427/1448351158_menu-alt.png);
- background-position:center
- background-repeat:no-repeat
-}
-
-a:hover#responsive-menu{
-  background:#05a;
-}
-
-ul{
-  list-style:none;
-}
-
-li{
-  display:inline-block;
-  float:left;
-  padding:20px;
-}
-
-.current{
-  color:#05a;
-}
-
-/************RESPONSIVE**************/
-@media screen and (max-width:540px){
-  
-  #responsive-menu{
-    display:inline-block;
+  body {
+    margin: 0;
+    color: #05a;
+    font: 600 16px/18px 'Open Sans', sans-serif;
   }
-  
-  nav ul, nav:active ul{
-    display:none;
-    position:absolute;
-    background:rgb(240,240,240);
-    border:4px solid #05a;
-    left:14px;
-    top:80px;
-    width:60%;
+
+  a {
+    text-decoration: none;
+    color: rgb(40, 42, 116);
+    font-family: sans-serif;
+    font-weight: bold;
+    text-shadow: 1.5px 2px 0 rgba(0, 0, 0, .2);
+    transition: color linear .4s;
+    -webkit-transition: color linear .4s;
+    -moz-transition: color linear .4s;
   }
-  
-  nav ul:after{
-    width:0px;
-    height:0px;
-    position:absolute;
-    top:-17%;
-    left:8px;
-    content:'';
-    transform:translate(0%, 100%);
-    -webkit-transform:translate(0%, 100%);
-    -moz-transform:translate(0%, 100%);
-    border-left:15px solid transparent;
-    border-right:15px solid transparent;
-    border-bottom:15px solid #05a;
+
+  a:hover {
+    color: #05a;
   }
-  
-  nav li{
-    text-align:center;
-    width:100%;
-    padding:10px 0px;
-    margin:0;
+
+  header {
+    background: rgb(240, 240, 240);
+    width: 100%;
+    height: 80px;
+    position: absolute;
+    top: 0;
+    left: 0;
+    border-bottom: 3px solid #05a;
+    z-index: 100;
   }
-  
-  nav:hover ul{
-    display:block;
+
+  nav {
+    padding: 20px;
+    float: left;
   }
-}
-.logo{
-  margin-left: 20px;
-  height: 50px;
-  left: 50px;
-}
-.icon{
-  float: right;
-  height: 50px;
-  left: 50px;
-}
-/*******************corpo ********************/
 
-.login,
-.login input,
-label {
-  -webkit-border-radius: 8px;
-  -moz-border-radius: 8px;
-  border-radius: 8px;
-}
+  #responsive-menu {
+    width: 40px;
+    height: 40px;
+    display: none;
+    border: 4px solid #05a;
+    background-image: url(https://s3-us- west-2.amazonaws.com/s.cdpn.io/65427/1448351158_menu-alt.png);
+    background-position: center background-repeat:no-repeat
+  }
 
-.login {
-  padding-top: 250px;
-  width: 400px;
-  margin: 2em auto;
-  font-size: 16px;
-  overflow: hidden;
-}
+  a:hover#responsive-menu {
+    background: #05a;
+  }
 
-/* Redefinir margens superior e inferior*/
+  ul {
+    list-style: none;
+  }
 
-.login-header,
-.login p {
-  margin-top: 0;
-  margin-bottom: 0;
-}
+  li {
+    display: inline-block;
+    float: left;
+    padding: 20px;
+  }
 
-.login-header {
-  background: #28d;
-  padding: 20px;
-  font-size: 1.4em;
-  font-weight: normal;
-  text-align: center;
-  color: #fff;
-}
+  .current {
+    color: #05a;
+  }
 
-.login-container {
-  background: #fff;
-  padding: 12px;
-}
+  /************RESPONSIVE**************/
+  @media screen and (max-width:540px) {
 
-/* Cada linha dentro de .login-container é definida com a tag p */
+    #responsive-menu {
+      display: inline-block;
+    }
 
-.login p {
-  padding: 12px;
-}
+    nav ul,
+    nav:active ul {
+      display: none;
+      position: absolute;
+      background: rgb(240, 240, 240);
+      border: 4px solid #05a;
+      left: 14px;
+      top: 80px;
+      width: 60%;
+    }
 
-.login input {
-  box-sizing: border-box;
-  display: block;
-  width: 100%;
-  border-width: 1px;
-  border-style: solid;
-  padding: 16px;
-  outline: 0;
-  font-family: inherit;
-  font-size: 0.95em;
-}
+    nav ul:after {
+      width: 0px;
+      height: 0px;
+      position: absolute;
+      top: -17%;
+      left: 8px;
+      content: '';
+      transform: translate(0%, 100%);
+      -webkit-transform: translate(0%, 100%);
+      -moz-transform: translate(0%, 100%);
+      border-left: 15px solid transparent;
+      border-right: 15px solid transparent;
+      border-bottom: 15px solid #05a;
+    }
 
-.login input {
-  background: #fff;
-  border-color: #bbb;
-  color: #555;
-}
+    nav li {
+      text-align: center;
+      width: 100%;
+      padding: 10px 0px;
+      margin: 0;
+    }
+
+    nav:hover ul {
+      display: block;
+    }
+  }
+
+  .logo {
+    margin-left: 20px;
+    height: 50px;
+    left: 50px;
+  }
+
+  .icon {
+    float: right;
+    height: 50px;
+    left: 50px;
+  }
+
+  /*******************corpo ********************/
+
+  .login,
+  .login input,
+  label {
+    -webkit-border-radius: 8px;
+    -moz-border-radius: 8px;
+    border-radius: 8px;
+  }
+
+  .login {
+    padding-top: 250px;
+    width: 400px;
+    margin: 2em auto;
+    font-size: 16px;
+    overflow: hidden;
+  }
+
+  /* Redefinir margens superior e inferior*/
+
+  .login-header,
+  .login p {
+    margin-top: 0;
+    margin-bottom: 0;
+  }
+
+  .login-header {
+    background: #28d;
+    padding: 20px;
+    font-size: 1.4em;
+    font-weight: normal;
+    text-align: center;
+    color: #fff;
+  }
+
+  .login-container {
+    background: #fff;
+    padding: 12px;
+  }
+
+  /* Cada linha dentro de .login-container é definida com a tag p */
+
+  .login p {
+    padding: 12px;
+  }
+
+  .login input {
+    box-sizing: border-box;
+    display: block;
+    width: 100%;
+    border-width: 1px;
+    border-style: solid;
+    padding: 16px;
+    outline: 0;
+    font-family: inherit;
+    font-size: 0.95em;
+  }
+
+  .login input {
+    background: #fff;
+    border-color: #bbb;
+    color: #555;
+  }
 
 
-/* Campos de textos com efeito focus*/
-.login input:focus {
-   border-color: #888;
-}
+  /* Campos de textos com efeito focus*/
+  .login input:focus {
+    border-color: #888;
+  }
 
 
-.login input[type="submit"] {
-  background: #28d;
-  border-color: transparent;
-  color: #fff;
-  cursor: pointer;
-  font-size: 18px;
-}
+  .login input[type="submit"] {
+    background: #28d;
+    border-color: transparent;
+    color: #fff;
+    cursor: pointer;
+    font-size: 18px;
+  }
 
-.login input[type="submit"]:hover {
-  background: #17c;
-}
+  .login input[type="submit"]:hover {
+    background: #17c;
+  }
 
 
-/* Buttons' Efeito focus*/
+  /* Buttons' Efeito focus*/
 
-.login input[type="submit"]:focus {
-  border-color: #05a;
-}
+  .login input[type="submit"]:focus {
+    border-color: #05a;
+  }
 
-body {
-  font-family: 'Noto Sans', sans-serif;
-  color:#757575 /*#616161*/;
-  background-color:#eeeeee;
- }
+  body {
+    font-family: 'Noto Sans', sans-serif;
+    color: #757575
+      /*#616161*/
+    ;
+    background-color: #eeeeee;
+  }
 
+  p {
+    color: #757575;
+
+  }
+
+  .rodape {
+    background-color: #000000;
+    color: #F2FFFC;
+    padding: 1rem;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
+    height: 150px;
+    opacity: 0.80;
+    box-sizing: border-box;
+  }
+
+  .bloco1 {
+    color: #888;
+    width: 500px;
+    height: 145px;
+    padding-left: 200px;
+  }
+
+  .arodape {
+    color: #888;
+  }
+
+  .imgCentro {
+    padding-top: 150px;
+    padding-left: 700px;
+    width: 340px;
+    height: 340px;
+    position: fixed;
+    align-items: center;
+  }
+
+  h1 {
+    padding-top: 550px;
+    padding-left: 600px;
+    width: 100%;
+    height: 100%;
+    position: fixed;
+    align-items: center;
+  }
 </style>
 <link href="https://fonts.googleapis.com/css?family=Noto+Sans:400,700" rel="stylesheet">
 <header>
   <nav>
-      <a href="#" id="responsive-menu"></a>
+    <a href="#" id="responsive-menu"></a>
     <ul>
-      <li><a href="https://padlocksecurity.herokuapp.com/desenvolvimento/rotasparaimportacao" target="_blank" >Rota Insomnia</a></li>
-      <li><a href="https://padlocksecurity.herokuapp.com/documentacao/#/" target="_blank" >Rotas Online</a></li>
-      <li><a href="https://padlocksecurity.herokuapp.com/desenvolvimento/ferramentasDoDesenvolvedor" target="_blank" >Ferramentas do Desenvolvedor</a></li>
+      <li><a href="https://padlocksecurity.herokuapp.com/desenvolvimento/rotasparaimportacao" target="_blank">Rota
+          Insomnia</a></li>
+      <li><a href="https://padlocksecurity.herokuapp.com/documentacao/#/" target="_blank">Rotas Online</a></li>
+      <li><a href="https://padlocksecurity.herokuapp.com/desenvolvimento/ferramentasDoDesenvolvedor"
+          target="_blank">Ferramentas do Desenvolvedor</a></li>
 
     </ul>
   </nav>
 </header>
-
-  
-
+<img
+  src="https://images.vexels.com/media/users/3/136498/isolated/preview/588187d92d423fb320f4a4cf8b2486c5-icone-de-cadeado-aberto.png"
+  class="imgCentro">
+<h1>Sua Segurança em primeiro lugar</h1>
+<footer class="rodape">
+  <div class="bloco1">
+    <link><a href="https://github.com/montanha1337/padlock" target="_blank">
+      <h2>GITHUB API</h2>
+    </a></link>
+    <h2>Telefone SAC:(34) 9 9646-95669</h2>
+  </div>
+</footer>

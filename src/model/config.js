@@ -1,6 +1,6 @@
-import {Schema, model} from 'mongoose'
+import { Schema, model } from 'mongoose'
 const ConfigSchema = new Schema({
-    secreta:String,
+    secreta: String,
     totalBanco: String,
     tipoPix: String
 })

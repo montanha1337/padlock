@@ -1,37 +1,38 @@
 {
-    "openapi":"3.0.0",
-    "info":{
+    "openapi": "3.0.0",
+    "info": {
         "title": "Api para salvar pix",
-        "description":"Essa api tem como armazenar as chaves pix.",
-        "version":"1.0.0"
+        "description": "Essa api tem como armazenar as chaves pix.",
+        "version": "1.0.0"
     },
-    "servers":[
+    "servers": [
         {
-            "url":"https://padlocksecurity.herokuapp.com",
-            "description":"Api produção"
+            "url": "https://padlocksecurity.herokuapp.com",
+            "description": "Api produção"
         },
         {
-            
-            "url":"http://localhost:8080",
-            "description":"Api desenvolvimento"
+            "url": "http://localhost:8080",
+            "description": "Api desenvolvimento"
         }
     ],
-    "paths":{
-        "/desenvolvimento/testeserver":{
-            "get":{
-                "summary":"Teste De Rota",
-                "description":"esta rota está responsavel ara realização de teste de conexão com servidor.",
-                "tags":["Desenvolvimento"],
-                "responses":{
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "conexão":{
-                                        "type":"object",
-                                        "properties":{
-                                            "descricao":"Acessado backend!!!"
+    "paths": {
+        "/desenvolvimento/testeserver": {
+            "get": {
+                "summary": "Teste De Rota",
+                "description": "esta rota está responsavel ara realização de teste de conexão com servidor.",
+                "tags": [
+                    "Desenvolvimento"
+                ],
+                "responses": {
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "conexão": {
+                                        "type": "object",
+                                        "properties": {
+                                            "descricao": "Acessado backend!!!"
                                         }
                                     }
                                 }
@@ -41,491 +42,506 @@
                 }
             }
         },
-        "/user/inserir":{
-            "post":{
-                "summary":"cadastro de usuario",
-                "description":"esta rota é responsavel por cadastrar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "aplication/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userCadastro"
+        "/user/inserir": {
+            "post": {
+                "summary": "cadastro de usuario",
+                "description": "esta rota é responsavel por cadastrar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "aplication/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userCadastro"
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"error",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "error",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
-        },        
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        },
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/buscarUm":{
-            "get":{
-                "summary":"buscar um usuario",
-                "description":"esta rota é responsavel por trazer os dados de um usuario.",
-                "tags":["User"],
-                "security":[{ "bearerAuth":[] }],
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+        "/user/buscarUm": {
+            "get": {
+                "summary": "buscar um usuario",
+                "description": "esta rota é responsavel por trazer os dados de um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "security": [
+                    {
+                        "bearerAuth": []
+                    }
+                ],
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         },
-        "/user/login":{
-            "post":{
-                "summary":"Login de usuario",
-                "description":"esta rota é responsavel por logar um usuario.",
-                "tags":["User"],
-                "requestBody":{
-                    "content":{
-                        "application/json":{
-                            "schema":{
-                                "$ref":"#/components/schemas/userLogin"
+        "/user/login": {
+            "post": {
+                "summary": "Login de usuario",
+                "description": "esta rota é responsavel por logar um usuario.",
+                "tags": [
+                    "User"
+                ],
+                "requestBody": {
+                    "content": {
+                        "application/json": {
+                            "schema": {
+                                "$ref": "#/components/schemas/userLogin"
                             },
-                            "examples":{
-                                "user":{
-                                    "value":{
-                                        "email":"lockpix@gmail.com",
-                                        "senha":"Desenvolvedorespremi1"
+                            "examples": {
+                                "user": {
+                                    "value": {
+                                        "email": "lockpix@gmail.com",
+                                        "senha": "Desenvolvedorespremi1"
                                     }
-
                                 }
                             }
                         }
                     }
                 },
-                "responses":{
-                    "400":{
-                        "description":"Unauthorized",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "erro":{
-                                        "type":"object",
-                                        "properties":{
-                                            "erro":"string"
+                "responses": {
+                    "400": {
+                        "description": "Unauthorized",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "erro": {
+                                        "type": "object",
+                                        "properties": {
+                                            "erro": "string"
                                         }
                                     }
                                 }
                             }
-                        }  
+                        }
                     },
-                    "200":{
-                        "description":"Ok",
-                        "content":{
-                            "aplication/json":{
-                                "schema":{
-                                    "$ref":"#/components/schemas/userResponse"
+                    "200": {
+                        "description": "Ok",
+                        "content": {
+                            "aplication/json": {
+                                "schema": {
+                                    "$ref": "#/components/schemas/userResponse"
                                 }
                             }
-                        }  
+                        }
                     }
                 }
             }
         }
     },
-    "components":{
-        "schemas":{
-            "userCadastro":{
-                "type":"object",
-                "properties":{
-                    "nome":{
-                        "type":"string"
+    "components": {
+        "schemas": {
+            "userCadastro": {
+                "type": "object",
+                "properties": {
+                    "nome": {
+                        "type": "string"
                     },
-                    "email":{
-                        "type":"string"
+                    "email": {
+                        "type": "string"
                     },
-                    "senha":{
-                        "type":"string"
+                    "senha": {
+                        "type": "string"
                     }
                 }
             },
-            "userLogin":{
-                "type":"object",
-                "properties":{
-                    "email":{
-                        "type":"string"
+            "userLogin": {
+                "type": "object",
+                "properties": {
+                    "email": {
+                        "type": "string"
                     },
-                    "senha":{
-                        "type":"string"
+                    "senha": {
+                        "type": "string"
                     }
                 }
             },
-            "userResponse":{
-                "type":"object",
-                "properties":{
-                    "token":{
-                        "type":"string"
+            "userResponse": {
+                "type": "object",
+                "properties": {
+                    "token": {
+                        "type": "string"
                     }
                 }
             }
         },
-    "securitySchemes":{
-        "bearerAuth":{
-            "type":"http",
-            "scheme":"bearer",
-            "bearerFormat":"JWT"
+        "securitySchemes": {
+            "bearerAuth": {
+                "type": "http",
+                "scheme": "bearer",
+                "bearerFormat": "JWT"
+            }
         }
-    }
     }
 }

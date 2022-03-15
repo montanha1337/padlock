@@ -2,54 +2,54 @@ import BancoModel from '../model/Banco';
 import BancoApi from '../client.web/bancoapi'
 
 
-async function inserir(){
+async function inserir() {
     let nome
     let code
     let fullNome
     let banco = new Object()
     let bancos = await BancoApi.buscarBancos()
     let pesquisa
-    banco.dados=bancos
+    banco.dados = bancos
     banco.tamanho = bancos.length
-    for(let i = 0; i < banco.tamanho; i++){
+    for (let i = 0; i < banco.tamanho; i++) {
         nome = banco.dados[i].name
         code = banco.dados[i].code
-        fullNome=banco.dados[i].fullName
+        fullNome = banco.dados[i].fullName
 
-        pesquisa = await BancoModel.findOne({code})
-            if(!pesquisa){
-                bancos = await BancoModel.create({nome,code,fullNome})
-            }
+        pesquisa = await BancoModel.findOne({ code })
+        if (!pesquisa) {
+            bancos = await BancoModel.create({ nome, code, fullNome })
+        }
 
     }
-    banco= await listar()
+    banco = await listar()
 
     return banco
 
 }
-async function listar(){
+async function listar() {
     let banco = new Object()
     banco.dados = await BancoModel.find()
     banco.tamanho = banco.dados.length
     return banco
 }
 
-async function excluir(){
+async function excluir() {
     let banco = new Object()
     banco.dados = await BancoModel.deleteMany()
     return banco
 }
 
-async function listarUm(code){
-    let banco = await BancoModel.findOne({code})
-    if(banco){
+async function listarUm(code) {
+    let banco = await BancoModel.findOne({ code })
+    if (banco) {
         return banco
-    }else{
+    } else {
         await inserir()
-        banco = await BancoModel.findOne({code})
+        banco = await BancoModel.findOne({ code })
         return banco
     }
 }
 
 
-module.exports = {inserir,listar,excluir, listarUm}
+module.exports = { inserir, listar, excluir, listarUm }
