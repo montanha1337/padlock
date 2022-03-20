@@ -32,9 +32,9 @@ router.get('/listar', async (req, res) => {
   let listar = await ContatoControl.listar(token)
   if (listar.status == false) {
     res.status(400).json(listar.mensagem)
-  }
+  }else{
   res.status(200).json(listar)
-
+  }
 })
 
 router.delete('/deletar', async (req, res) => {

@@ -78,6 +78,10 @@ async function listarUm(user) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     user = await UserModel.findById(user)
+    return user
+}
+async function listarUmEmail(email) {
+    let user = await UserModel.find({email})
     console.log(user)
     return user
 }
@@ -93,4 +97,4 @@ async function testeSenha(senha) {
 
 
 
-module.exports = { inserir, excluirUm, excluirId, listar, login, listarUm, testeSenha }
+module.exports = { inserir, excluirUm, excluirId, listar, login, listarUm,listarUmEmail, testeSenha }

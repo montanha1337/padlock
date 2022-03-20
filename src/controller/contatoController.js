@@ -55,36 +55,55 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     }
     return inserir.result
 }
-
-/*async function listar(IdUser){
-    IdUser =await Funcao.verificajwt(IdUser)
-    if(IdUser==false){
-        return Funcao.padraoErro("Usuario não identificado!!!")
-    }
-    let listar = new Object()
-    let lista = await ContatoModel.find({IdUser})
-    listar.nome = lista[0].nome
-    listar.pix=lista[0].pix
-    for(let i = 0; i < listar.pix.length; i++){
-        listar.pix[i].pix = await Funcao.verificajwt(listar.pix[i].pix)
-        listar.pix[i]._id[i]
-        console.log({i,teste:listar.pix[i]._id})
-    }
-
-    return listar
-}*/
 async function listar(IdUser) {
     let listar = new Object()
+    let id
     listar = []
     IdUser = await Funcao.verificajwt(IdUser)
     if (IdUser == false) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
-    let lista = await ContatoModel.find({ IdUser }).select({})
+    let lista = await ContatoModel.find({ IdUser })
+    id= await Funcao.gerajwt(lista[0].id)
     for (let i = 0; i < lista[0].pix.length; i++) {
-        listar[i] = await formataDados(lista[0].pix[i].pix, lista[0].pix[i].tipo)
+        listar[i] = await formataDados( lista[0].pix[i].pix, lista[0].pix[i].tipo)
     }
-    console.log(listar)
-    return { nome: lista[0].nome, pix: listar }
+    return {tokenContato : id, nome: lista[0].nome, pix: listar }
 }
-module.exports = { inserir, adicionarPix, listar }
+
+async function listarUm(user,contato) {
+    let listar
+    user = await Funcao.verificajwt(user)
+    if (user == false) {
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    contato = await Funcao.verificajwt(contato)
+    if (contato == false) {
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    listar = await ContatoModel.findById({IdUser:user,_idcontato})
+    console.log(listar)
+    return listar
+}
+
+async function excluirContato(user) {
+    user = await Funcao.verificajwt(user)
+    if (user == false) {
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    let result = await UserModel.findByIdAndDelete(user)
+    console.log(result)
+    return result
+}
+async function excluirPix(user) {
+    user = await Funcao.verificajwt(user)
+    if (user == false) {
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    let result = await UserModel.findByIdAndDelete(user)
+    console.log(result)
+    return result
+}
+
+
+module.exports = { inserir, adicionarPix, listar, listarUm, excluirContato, excluirPix }

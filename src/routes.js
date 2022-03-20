@@ -1,11 +1,13 @@
-import { Router } from 'express';
+import { Router } from 'express'
+import swaggerUiExpress from 'swagger-ui-express'
+import swaggerDocs from './swagger.json'
 import Dev from './view/DesenvolvedorRoutes'
 import User from './view/UserView'
 import Pix from './view/PixView'
 import Banco from './view/BancoView'
-import Contato from './view/ContatoView';
-import swaggerUiExpress from 'swagger-ui-express';
-import swaggerDocs from './swagger.json';
+import Contato from './view/ContatoView'
+import Logs from './view/LogsView'
+
 
 const routes = new Router();
 //olhar o final da rota 
@@ -21,6 +23,7 @@ routes.use('/user', User)//Rota para realizar cadastros e login
 routes.use('/pix', Pix) // Rota para realizar consultas e modificações da chave pix.
 routes.use('/banco', Banco) // Rota para realizar consultas atualizações e manutenção aos bancos credores na base de dados.
 routes.use('/contato', Contato) // rota utilizada para realizar o CRUD da lista de contatos.
+routes.use('/log', Logs) // rota para teste de logs no banco.
 
 
 module.exports = routes;

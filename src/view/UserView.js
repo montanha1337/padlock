@@ -36,7 +36,7 @@ router.post('/login', async (req, res) => {
     res.status(200).json(login)
   }
 })
-router.get('/dev/listar', async (req, res) => {
+router.get('/dev/listar', async (req, res) => { //Lista Todos os usuarios (somente tem homologação)
   const email = req.body.email
   const senha = req.body.senha
   let listar = await UserControl.listar(email)
