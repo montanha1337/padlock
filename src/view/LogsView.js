@@ -5,7 +5,7 @@ const router = express.Router()
 
 router.post('/inserir', async (req, res) => {
     let email= req.body.email
-    let ip = req.headers.connection
+    let ip = req.connection
     console.log({email,ip})
     res.status(200).json("deu certo")
 })
