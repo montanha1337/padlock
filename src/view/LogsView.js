@@ -1,13 +1,13 @@
 import express from 'express'
-import LogsControl from '../controller/logs'
+import LogsControl from '../controller/LogController'
 
 const router = express.Router()
 
 router.post('/inserir', async (req, res) => {
     let email= req.body.email
-    let ip = req.connection
-    console.log({email,ip})
-    res.status(200).json("deu certo")
+    let result = await LogsControl.ValidaLogin(email)
+
+    res.json(result)
 })
 
 

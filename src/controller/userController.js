@@ -1,34 +1,89 @@
 import Funcao from './functions'
-import UserModel from '../model/user';
+import UserModel from '../model/user'
+import LogControl from './LogController'
 
+//#region CRUD
 
 async function inserir(nome, email, senha) {
     let result
-    senha = await testeSenha(senha)
-    if (senha.status == false) {
-        return Funcao.padraoErro(senha.mensagem)
-    }
-    result = await login(email, senha.senhacripta)
-    if (result.status == false) {
-        if (result.mensagem == 'Usuario não cadastrado') {
-            //caso não tenha cadastro
-            result = await UserModel.create({ email, nome, senha: senha.senhacripta })
-            result = await login(email, senha)
-            console.log(result)
+    email = Funcao.validaEmail(email)
+    if (email.retorno == true) {
+        senha = await Funcao.validaSenha(senha)
+        if (senha.valida == true) {
+            nome = await Funcao.encripta(nome)
+            await UserModel.create({ email: email.email, nome, senha: senha.senhacripta })
+            result = await login(email.email, senha.senha)
             return result
         } else {
-            //caso não tenha logado, mas já existe
-            return result
+            return senha
         }
     } else {
-        //caso seja logado 
-        return result
+        return email
     }
 }
-async function excluirUm(email) {
-    let result = await UserModel.findOneAndDelete({ email })
-    console.log({ result })
-    return result
+
+async function login(email, senha) {
+    try {
+        let oValidaEmail
+        let oValidaSenha
+        let oSenhaBd
+        let oBuscarUser
+        let token
+        let oLog
+        oValidaEmail = Funcao.validaEmail(email)
+        if (oValidaEmail.status == false) {
+            return oValidaEmail
+        }
+        oValidaSenha = await Funcao.validaSenha(senha)
+        if (oValidaSenha.status == false) {
+            return oValidaSenha
+        }
+        //oLog = await LogControl.ValidaLogin(email)
+        //if(oLog.status==false){
+        //    return oLog
+        //}
+        oBuscarUser = await UserModel.find({ email })
+        if (oBuscarUser == "") {
+            return Funcao.padraoErro("Usuário não cadastrado")
+        }else{
+            oSenhaBd = await Funcao.verificajwt(oBuscarUser[0].senha)
+            if (oSenhaBd == false) {
+                return Funcao.padraoErro("Senha Expirada")
+            }
+            if (oSenhaBd == senha) {
+                token = await Funcao.gerajwt(oBuscarUser[0]._id)
+                return token
+             } else {
+                //await LogControl.ValidaLogin(email)
+                return Funcao.padraoErro("Senha Incorreta")
+            }
+        }
+    } catch (e) {
+        console.log(e)
+        return Funcao.padraoErro("Ops,Algo de errado!!")
+    }
+}
+
+
+async function AlterarSenha(email, senha) {
+    let result = new Object()
+    let token
+    result = await login(email, senha)
+    if (result.mensagem == "Senha Incorreta" || result.mensagem == "Senha Expirada") {
+        let result = await UserModel.findOne({ email })
+        if (result) {
+            senha = await testeSenha(senha)
+            if (senha.status == false)
+                return Funcao.padraoErro(senha.mensagem)
+            await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senha.senhacripta })
+            token = await Funcao.gerajwt(result._id)
+            return token
+        } else {
+            return Funcao.padraoErro("Email não encontrado!!")
+        }
+    } else {
+        return result
+    }
 }
 
 async function excluirId(user) {
@@ -37,41 +92,9 @@ async function excluirId(user) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     let result = await UserModel.findByIdAndDelete(user)
-    console.log(result)
     return result
 }
 
-async function listar() {
-    let result = await UserModel.find({})
-    if (result) {
-        return result
-    } else {
-        return Funcao.padraoErro('Lista Vazia')
-    }
-}
-async function login(email, senha) {
-    let token
-    let result = await UserModel.findOne({ email })
-    if (result) {
-        result.senha = await Funcao.verificajwt(result.senha)
-        if (result.senha.status == false) {
-            return Funcao.padraoErro("senha expirou!!!")
-        }
-        if (result.senha == senha) {
-            senha = await testeSenha(senha)
-            if (senha.status == false) {
-                return Funcao.padraoErro(senha.mensagem)
-            }
-            await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senha.senhacripta })
-            token = await Funcao.gerajwt(result._id)
-            return { token }
-        } else {
-            return Funcao.padraoErro('Senha incorreta')
-        }
-    } else {
-        return Funcao.padraoErro('Usuario não cadastrado')
-    }
-}
 async function listarUm(user) {
     user = await Funcao.verificajwt(user)
     if (user == false) {
@@ -80,21 +103,31 @@ async function listarUm(user) {
     user = await UserModel.findById(user)
     return user
 }
-async function listarUmEmail(email) {
-    let user = await UserModel.find({email})
-    console.log(user)
-    return user
-}
+
+
+//#endregion
+
+//#region DESENVOLVIMENTO
 async function testeSenha(senha) {
-    console.log(senha)
     senha = await Funcao.validaSenha(senha)
-    if (senha.status == false) {
-        return Funcao.padraoErro("Senha inválida")
-    }
     return senha
 }
 
+async function excluirUm(email) {
+    let result = await UserModel.findOneAndDelete({ email })
+    return result
+}
+
+async function listar() {
+    let result = await UserModel.find({})
+    if (result) {
+        return result
+    } else {
+        return Funcao.padraoErro("Lista Vazia")
+    }
+}
+
+//#endregion
 
 
-
-module.exports = { inserir, excluirUm, excluirId, listar, login, listarUm,listarUmEmail, testeSenha }
+module.exports = { inserir, excluirUm, excluirId, listar, login, AlterarSenha, listarUm, testeSenha }
