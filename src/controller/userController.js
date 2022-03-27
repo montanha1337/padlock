@@ -100,7 +100,8 @@ async function listarUm(user) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     user = await UserModel.findById(user)
-    return padraoSucesso(user)
+    
+    return Funcao.padraoSucesso(user)
 }
 
 //#endregion
