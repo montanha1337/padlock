@@ -1,6 +1,7 @@
 import BancoModel from '../model/Banco';
 import BancoApi from '../client.web/bancoapi'
 import ConfigControl from './config'
+import Funcao from './functions'
 
 
 async function inserir() {

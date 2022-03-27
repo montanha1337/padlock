@@ -71,6 +71,18 @@ async function listar(IdUser) {
     return Funcao.padraoSucesso({token:IdUser,tokenContato : id, Contato: lista[0].nome, pix: listar })
 }
 
+async function EditarContato(user,contato,nome){
+    user = await Funcao.verificajwt(user)
+    if(user==false){
+        return Funcao.padraoErro("Usuario não Encontrado")
+    }
+    contato = await Funcao.verificajwt(contato)
+    if(contato==false){
+        return Funcao.padraoErro("Contato não Encontrado")
+    }
+    await ContatoModel.findOneAndUpdate({IdUser:user,_id:contato})
+}
+
 async function listarUm(user,contato) {
     let listar
     user = await Funcao.verificajwt(user)
@@ -79,28 +91,33 @@ async function listarUm(user,contato) {
     }
     contato = await Funcao.verificajwt(contato)
     if (contato == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+        return Funcao.padraoErro("Contato não identificado!!!")
     }
-    listar = await ContatoModel.findById({IdUser:user,_idcontato})
+    listar = await ContatoModel.findById({IdUser:user,_id:contato},nome)
     return Funcao.padraoSucesso(listar)
 }
 
-async function excluirContato(user) {
-    user = await Funcao.verificajwt(user)
-    if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+async function excluirContato(idUser,idContato) {
+    idUser = await Funcao.verificajwt(idUser)
+    if(idUser==false){
+        return Funcao.padraoErro("Usuario não Encontrado")
     }
-    let result = await UserModel.findByIdAndDelete(user)
-    return Funcao.padraoSucesso(result)
+    idContato = await Funcao.verificajwt(idContato)
+    if(idContato==false){
+        return Funcao.padraoErro("Contato não Encontrado")
+    }
+    await ContatoModel.findOneAndDelete({_id:idContato,IdUser:idUser})
+    return Funcao.padraoSucesso({message:"Deletado com sucesso"})
 }
-async function excluirPix(user) {
+
+async function excluirPix(user,pix) {
     user = await Funcao.verificajwt(user)
     if (user == false) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
-    let result = await ContatoModel.findByIdAndDelete(user)
+    let result = await ContatoModel.findOneAndDelete({IdUser:user,pix:{pix}})
     return Funcao.padraoSuucesso(result)
 }
 
 
-module.exports = { inserir, adicionarPix, listar, listarUm, excluirContato, excluirPix }
+module.exports = { inserir, adicionarPix, EditarContato, listar, listarUm, excluirContato, excluirPix }

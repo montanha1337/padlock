@@ -1,6 +1,6 @@
 import Funcao from './functions'
 import UserModel from '../model/user'
-//import LogControl from './LogController'
+import LogControl from './LogController'
 
 //#region CRUD
 
@@ -40,7 +40,7 @@ async function login(email, senha) {
     if (oValidaSenha.status == 400) {
         return oValidaSenha
     }
-    oLog = await LogControl.ValidaAcesso(email)
+    oLog = await LogControl.InserirLog(email)
     if(oLog.status==400){
         return oLog
     }
@@ -57,7 +57,7 @@ async function login(email, senha) {
             await LogControl.deleta(email)
             return Funcao.padraoSucesso({ token })
         } else {
-            await LogControl.inserirLog(email)
+            await LogControl.InserirLog(email)
             return Funcao.padraoErro("Senha Incorreta")
         }
     }

@@ -12,7 +12,15 @@ router.post('/inserir', async (req, res) => {
   res.status(inserir.status).json(inserir)
 })
 
-router.post('/adicionarpix', async (req, res) => {
+router.put('/editarNome', async (req, res) => {
+  let token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let id =req.body.contato
+  let nome = req.body.nome
+  let deletar = await EditarContato(token.id,nome)
+  res.status(deletar.status).json(deletar)
+})
+
+router.post('/adicionarPix', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
   let contato = req.body.nome
   let pix = req.body.pix
@@ -28,11 +36,18 @@ router.get('/listar', async (req, res) => {
 })
 
 router.delete('/deletar', async (req, res) => {
+  let token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let id =req.body.contato
+  let deletar = await excluirContato(token,id)
   res.status(deletar.status).json(deletar)
 })
 
-router.get('/listar/:code', async (req, res) => {
-  res.status(listar.status).json(listar)
+router.delete('/deletarPix', async (req, res) => {
+  let token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let pix =req.body.pix
+  let deletar = await excluirPix(token,pix)
+  res.status(deletar.status).json(deletar)
 })
+
 
 module.exports = router
