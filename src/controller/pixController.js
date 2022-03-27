@@ -71,14 +71,14 @@ async function inserir(user, emailUser, pix, banco, tipo) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     valida = await PixModel.find({ user, emailUser, banco })
-    if (valida.length > 4) {
+    if (valida.length > 5) {
         return Funcao.padraoErro("Quantidade de pix cadastrados excede o limite para este banco.")
     }
     result = await PixModel.create({ user, emailUser, tipo, pix, banco })
     buscaUser = await UserControl.listarUm(user)
     buscaBanco = await BancoControl.listarUm(banco)
     usuario = await organizaDados(buscaUser.nome, buscaUser.email, result.pix, result.tipo, buscaBanco.nome, buscaBanco.code, buscaBanco.fullNome)
-    return usuario
+    return Funcao.padraoSucesso(usuario)
 }
 async function listar(user, emailUser) {
     let pix = new Object()
@@ -96,16 +96,16 @@ async function listar(user, emailUser) {
     if (buscaPix[0]) {
         for (let i = 0; i < pix.tamanho; i++) {
             buscaUser = await UserControl.listarUm(user)
-            if (buscaUser.status == false) {
+            if (buscaUser.status == 400) {
                 return buscaUser
             }
             buscaBanco = await BancoControl.listarUm(pix.dados[i].banco)
-            if (buscaBanco.status == false) {
+            if (buscaBanco.status == 400) {
                 return buscaBanco
             }
             pix.lista[i] = await organizaDados(buscaUser.nome, buscaUser.email, pix.dados[i].pix, pix.dados[i].tipo, buscaBanco.nome, buscaBanco.code, buscaBanco.fullNome)
         }
-        return pix.lista
+        return Funcao.padraoSucesso(pix.lista)
     } else {
         return Funcao.padraoErro("Ocorreu um erro, por favor verifique os dados.")
     }
@@ -135,7 +135,7 @@ async function listarUm(user, emailUser, pixBusca) {
                 pix.dados = Funcao.padraoErro("pix não encontrado.")
             }
         }
-        return pix.dados
+        return Funcao.padraoSucesso(pix.dados)
     } else {
         return Funcao.padraoErro("Email inválido.")
     }
@@ -159,7 +159,7 @@ async function excluirId(user, email, pix) {
     }
     buscaPix = await PixModel.find({ user, email })
     tamanho = buscaPix.length
-    return tamanho
+    return Funcao.padraoSucesso(tamanho)
 }
 async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     let valida = validaPix(pixNovo, tipo)
@@ -185,12 +185,12 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
 
                 await PixModel.findOneAndUpdate({ user, email, pix: pix.encript }, { pix: pix.novo, tipo, banco })
                 pix.dados = await listarUm(userEncript, email, pixNovo)
-                return pix.dados
+                return Funcao.padraoSucesso(pix.dados)
             } else {
                 pix.dados = Funcao.padraoErro("pix não encontrado.")
             }
         }
-        return pix.dados
+        return Funcao.padraoSucesso(pix.dados)
     } else {
         return Funcao.padraoErro("Email inválido.")
     }
@@ -199,9 +199,9 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
 function testePix(pix, tipo) {
     pix = validaPix(pix, tipo)
     if (pix.validador == true) {
-        pix.mensagem = "Pix válido"
+        return Funcao.padraoSucesso("pix Válido")
     }
-    return pix
+    return Funcao.padraoErro("Pix Inválido")
 }
 
 

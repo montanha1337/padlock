@@ -1,6 +1,5 @@
 import express from 'express'
 import BancoControl from '../controller/BancoController'
-import ConfigControl from '../controller/config'
 
 const router = express.Router()
 
@@ -11,15 +10,8 @@ router.get('/inserir', async (req, res) => {
 
 })
 router.get('/listar', async (req, res) => {
-  let bancos = new Object()
-  bancos = await BancoControl.listar()
-  bancos.tamanhobd = await ConfigControl.totalBanco()
-  if (bancos.tamanho == bancos.tamanhobd) {
-    res.status(200).json(bancos.dados)
-  } else {
-    bancos.api = await BancoControl.inserir()
-    res.status(200).json(bancos.api)
-  }
+  let bancos = await BancoControl.listar()
+  res.status(bancos.status).json(bancos)
 })
 
 router.delete('/deletar', async (req, res) => {
@@ -31,7 +23,7 @@ router.delete('/deletar', async (req, res) => {
 router.get('/listar/:code', async (req, res) => {
   const code = req.params.code
   let banco = await BancoControl.listarUm(code)
-  res.status(200).json(banco)
+  res.status(banco.status).json(banco)
 
 
 

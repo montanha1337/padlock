@@ -5,9 +5,15 @@ const router = express.Router()
 
 router.post('/inserir', async (req, res) => {
     let email= req.body.email
-    let result = await LogsControl.ValidaLogin(email)
+    let result = await LogsControl.InserirLog(email)
 
-    res.json(result)
+    res.status(result.status).json(result)
+})
+
+router.delete('/apagar', async (req, res) => {
+    let email= req.body.email
+    let result = await LogsControl.deleta(email)
+    res.status(result.status).json(result)
 })
 
 

@@ -1,5 +1,6 @@
 import BancoModel from '../model/Banco';
 import BancoApi from '../client.web/bancoapi'
+import ConfigControl from './config'
 
 
 async function inserir() {
@@ -31,7 +32,15 @@ async function listar() {
     let banco = new Object()
     banco.dados = await BancoModel.find()
     banco.tamanho = banco.dados.length
-    return banco
+    banco.bd= await ConfigControl.totalBanco()
+    if(banco.tamanho==banco.bd){
+        return Funcao.padraoSucesso(banco.dados)
+    }else{
+        await excluir()
+        await inserir()
+        banco.lista = await listar()
+        return padraoSucesso(banco.lista)
+    }
 }
 
 async function excluir() {
@@ -43,11 +52,11 @@ async function excluir() {
 async function listarUm(code) {
     let banco = await BancoModel.findOne({ code })
     if (banco) {
-        return banco
+        return Funcao.padraoSucesso(banco)
     } else {
         await inserir()
         banco = await BancoModel.findOne({ code })
-        return banco
+        return Funcao.padraoSucesso(banco)
     }
 }
 

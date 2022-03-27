@@ -1,88 +1,84 @@
 import Funcao from './functions'
 import UserModel from '../model/user'
-import LogControl from './LogController'
+//import LogControl from './LogController'
 
 //#region CRUD
 
 async function inserir(nome, email, senha) {
     let result
-    email = Funcao.validaEmail(email)
-    if (email.retorno == true) {
-        senha = await Funcao.validaSenha(senha)
-        if (senha.valida == true) {
-            nome = await Funcao.encripta(nome)
-            await UserModel.create({ email: email.email, nome, senha: senha.senhacripta })
-            result = await login(email.email, senha.senha)
+    result = await login(email, senha)
+    if (result.message == "Usuário não cadastrado") {
+        nome = await Funcao.encripta(nome)
+        result = await Funcao.validaSenha(senha)
+        console.log(result.result.senhacripta)
+        if (result.status == 200) {
+            await UserModel.create({ email, nome, senha: result.result.senhacripta })
+            result = await login(email, senha)
             return result
         } else {
-            return senha
+            return result
         }
-    } else {
-        return email
+    } else if(result.message == "Senha Expirada"){
+        
+    }else{
+        return result
     }
 }
 
 async function login(email, senha) {
-    try {
-        let oValidaEmail
-        let oValidaSenha
-        let oSenhaBd
-        let oBuscarUser
-        let token
-        let oLog
-        oValidaEmail = Funcao.validaEmail(email)
-        if (oValidaEmail.status == false) {
-            return oValidaEmail
+    let oValidaEmail
+    let oValidaSenha
+    let oSenhaBd
+    let oBuscarUser
+    let token
+    let oLog
+    oValidaEmail = Funcao.validaEmail(email)
+    if (oValidaEmail.status == 400) {
+        return oValidaEmail
+    }
+    oValidaSenha = await Funcao.validaSenha(senha)
+    if (oValidaSenha.status == 400) {
+        return oValidaSenha
+    }
+    oLog = await LogControl.ValidaAcesso(email)
+    if(oLog.status==400){
+        return oLog
+    }
+    oBuscarUser = await UserModel.find({ email })
+    if (oBuscarUser == "") {
+        return Funcao.padraoErro("Usuário não cadastrado")
+    } else {
+        oSenhaBd = await Funcao.verificajwt(oBuscarUser[0].senha)
+        if (oSenhaBd == false) {
+            return Funcao.padraoErro("Senha Expirada")
         }
-        oValidaSenha = await Funcao.validaSenha(senha)
-        if (oValidaSenha.status == false) {
-            return oValidaSenha
+        if (oSenhaBd == senha) {
+            token = await Funcao.gerajwt(oBuscarUser[0]._id)
+            await LogControl.deleta(email)
+            return Funcao.padraoSucesso({ token })
+        } else {
+            await LogControl.inserirLog(email)
+            return Funcao.padraoErro("Senha Incorreta")
         }
-        //oLog = await LogControl.ValidaLogin(email)
-        //if(oLog.status==false){
-        //    return oLog
-        //}
-        oBuscarUser = await UserModel.find({ email })
-        if (oBuscarUser == "") {
-            return Funcao.padraoErro("Usuário não cadastrado")
-        }else{
-            oSenhaBd = await Funcao.verificajwt(oBuscarUser[0].senha)
-            if (oSenhaBd == false) {
-                return Funcao.padraoErro("Senha Expirada")
-            }
-            if (oSenhaBd == senha) {
-                token = await Funcao.gerajwt(oBuscarUser[0]._id)
-                return token
-             } else {
-                //await LogControl.ValidaLogin(email)
-                return Funcao.padraoErro("Senha Incorreta")
-            }
-        }
-    } catch (e) {
-        console.log(e)
-        return Funcao.padraoErro("Ops,Algo de errado!!")
     }
 }
 
-
 async function AlterarSenha(email, senha) {
-    let result = new Object()
-    let token
-    result = await login(email, senha)
-    if (result.mensagem == "Senha Incorreta" || result.mensagem == "Senha Expirada") {
-        let result = await UserModel.findOne({ email })
-        if (result) {
-            senha = await testeSenha(senha)
-            if (senha.status == false)
-                return Funcao.padraoErro(senha.mensagem)
-            await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senha.senhacripta })
-            token = await Funcao.gerajwt(result._id)
-            return token
+    let valida = await login(email, senha)
+    if (valida.status == 200) {
+        return valida
+    } else if (valida.message == "Senha Incorreta" || valida.message == "Senha Expirada") {
+        valida = await Funcao.validaSenha(senha)
+        if (valida.status == 400) {
+            return valida
         } else {
-            return Funcao.padraoErro("Email não encontrado!!")
+            let result = await UserModel.findOne({ email })
+            if (result) {
+                await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: valida.result.senhacripta })
+                let ologin = await login(email, senha)
+                return ologin
+            }
         }
-    } else {
-        return result
     }
 }
 
@@ -92,7 +88,7 @@ async function excluirId(user) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     let result = await UserModel.findByIdAndDelete(user)
-    return result
+    return padraoSucesso(result)
 }
 
 async function listarUm(user) {
@@ -101,7 +97,7 @@ async function listarUm(user) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     user = await UserModel.findById(user)
-    return user
+    return padraoSucesso(user)
 }
 
 
