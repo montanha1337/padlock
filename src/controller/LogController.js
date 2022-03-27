@@ -12,13 +12,11 @@ async function InserirLog(email) {
     }
     if (oValidaAcesso.result.message == "liberado") { //trata os que ainda napo estão bloqueados
         oBuscaLog = await LogModel.findOne({ email })
-        console.log(email)
         if (oBuscaLog) {
             tentativa = oBuscaLog.tentativa + tentativa
             await LogModel.findByIdAndUpdate(oBuscaLog._id, { tentativa, data })
             return Funcao.padraoSucesso({ message: "Atualizado e liberado" })
         } else {
-            console.log(email)
             return Funcao.padraoErro(oBuscaLog)
         }
     } else { //trata os que erraram a primeira vez

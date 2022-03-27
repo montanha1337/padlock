@@ -64,15 +64,18 @@ async function login(email, senha) {
 }
 
 async function AlterarSenha(email, senha) {
+    await LogControl.deleta(email)
     let valida = await login(email, senha)
     if (valida.status == 200) {
         return valida
     } else if (valida.message == "Senha Incorreta" || valida.message == "Senha Expirada") {
         valida = await Funcao.validaSenha(senha)
+        console.log("2"+valida)
         if (valida.status == 400) {
             return valida
         } else {
             let result = await UserModel.findOne({ email })
+            console.log(valida)
             if (result) {
                 await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: valida.result.senhacripta })
                 let ologin = await login(email, senha)
@@ -99,7 +102,6 @@ async function listarUm(user) {
     user = await UserModel.findById(user)
     return padraoSucesso(user)
 }
-
 
 //#endregion
 
