@@ -5,4 +5,5 @@ const UserSchema = new Schema({
   nome: String,
   senha: String,
 })
+
 export default model('User', UserSchema);

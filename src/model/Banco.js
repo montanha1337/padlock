@@ -4,4 +4,5 @@ const BancoSchema = new Schema({
   code: String,
   fullNome: String
 })
+
 export default model('banco', BancoSchema);

@@ -3,7 +3,6 @@ import BancoApi from '../client.web/bancoapi'
 import ConfigControl from './config'
 import Funcao from './functions'
 
-
 async function inserir() {
     let nome
     let code
@@ -27,8 +26,8 @@ async function inserir() {
     banco = await listar()
 
     return banco
-
 }
+
 async function listar() {
     let banco = new Object()
     banco.dados = await BancoModel.find()

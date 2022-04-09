@@ -11,7 +11,7 @@ router.post('/inserir', async (req, res) => {
   const senha = req.body.senha
   let inserir = await UserControl.inserir(nome, email, senha)
   res.status(inserir.status).json(inserir)
-
+  
 })
 
 router.post('/login', async (req, res) => {

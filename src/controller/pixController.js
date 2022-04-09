@@ -107,7 +107,7 @@ async function listar(user, emailUser) {
         }
         return Funcao.padraoSucesso(pix.lista)
     } else {
-        return Funcao.padraoErro("Ocorreu um erro, por favor verifique os dados.")
+        return Funcao.padraoErro("Não foi encontrado registros para este usuário.")
     }
 }
 
