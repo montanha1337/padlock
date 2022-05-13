@@ -7,7 +7,6 @@ router.get('/inserir', async (req, res) => {
   const bancos = await BancoControl.inserir()
   let mensagem = bancos.mensagem
   res.status(200).json({ mensagem })
-
 })
 router.get('/listar', async (req, res) => {
   let bancos = await BancoControl.listar()
@@ -24,9 +23,6 @@ router.get('/listar/:code', async (req, res) => {
   const code = req.params.code
   let banco = await BancoControl.listarUm(code)
   res.status(banco.status).json(banco)
-
-
-
 })
 
 

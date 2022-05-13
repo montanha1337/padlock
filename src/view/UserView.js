@@ -17,7 +17,7 @@ router.post('/inserir', async (req, res) => {
 router.post('/login', async (req, res) => {
   const email = req.body.email
   const senha = req.body.senha
-  let login = await UserControl.login(email, senha)
+  let login = await UserControl.Validador("","",email, senha,"login")
   res.status(login.status).json(login)
 
 })

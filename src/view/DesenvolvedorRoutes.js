@@ -2,6 +2,7 @@ import express from 'express'
 import Funcao from '../controller/functions'
 import BancoApi from '../client.web/bancoapi'
 import ConfigControl from '../controller/config'
+import SenhaAntiga from '../controller/SenhaAntigaController'
 
 
 const router = express.Router()
@@ -71,6 +72,14 @@ router.post('/config/inserirtipopix', async (req, res) => {
 router.get('/config/listartipopix', async (req, res) => {
   let tipo = await ConfigControl.listarTipoPix()
   res.status(200).json(tipo)
+})
+
+router.post('/historicoDeSenha', async (req, res) => {
+  let email=req.body.email
+  let senha = req.body.senha
+  let resposta
+    resposta = await SenhaAntiga.SenhaAntiga(email,senha)
+  res.status(resposta.status).json(resposta)
 })
 
 

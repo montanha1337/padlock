@@ -1,49 +1,27 @@
 import Funcao from './functions'
 import UserModel from '../model/user'
 import LogControl from './LogController'
+import AntigaControl from './SenhaAntigaController'
 
 //#region CRUD
 
-async function inserir(nome, email, senha) {
+async function inserir(nome, email, senha, senhaEncripta) {
     let result
     result = await login(email, senha)
     if (result.message == "Usuário não cadastrado") {
         nome = await Funcao.encripta(nome)
-        result = await Funcao.validaSenha(senha)
-        console.log(result.result.senhacripta)
-        if (result.status == 200) {
-            await UserModel.create({ email, nome, senha: result.result.senhacripta })
+            await UserModel.create({ email, nome, senha: senhaEncripta })
             result = await login(email, senha)
             return result
-        } else {
+        }else {
             return result
         }
-    } else if(result.message == "Senha Expirada"){
-        
-    }else{
-        return result
-    }
 }
 
 async function login(email, senha) {
-    let oValidaEmail
-    let oValidaSenha
     let oSenhaBd
     let oBuscarUser
     let token
-    let oLog
-    oValidaEmail = Funcao.validaEmail(email)
-    if (oValidaEmail.status == 400) {
-        return oValidaEmail
-    }
-    oValidaSenha = await Funcao.validaSenha(senha)
-    if (oValidaSenha.status == 400) {
-        return oValidaSenha
-    }
-    oLog = await LogControl.InserirLog(email)
-    if(oLog.status==400){
-        return oLog
-    }
     oBuscarUser = await UserModel.find({ email })
     if (oBuscarUser == "") {
         return Funcao.padraoErro("Usuário não cadastrado")
@@ -70,7 +48,6 @@ async function AlterarSenha(email, senha) {
         return valida
     } else if (valida.message == "Senha Incorreta" || valida.message == "Senha Expirada") {
         valida = await Funcao.validaSenha(senha)
-        console.log("2"+valida)
         if (valida.status == 400) {
             return valida
         } else {
@@ -86,12 +63,10 @@ async function AlterarSenha(email, senha) {
 }
 
 async function excluirId(user) {
-    user = await Funcao.verificajwt(user)
-    if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
-    }
+    let email = await UserModel.findById(user)
     let result = await UserModel.findByIdAndDelete(user)
-    return padraoSucesso(result)
+    await AntigaControl.DeletaAntiga(email.email)
+    return Funcao.padraoSucesso(result)
 }
 
 async function listarUm(user) {
@@ -129,4 +104,60 @@ async function listar() {
 //#endregion
 
 
-module.exports = { inserir, excluirUm, excluirId, listar, login, AlterarSenha, listarUm, testeSenha }
+async function Validador(token, nome, email,senha, rota){
+    let user = await Funcao.verificajwt(token)
+    let testeEmail = Funcao.validaEmail(email)
+    let testeSenha = Funcao.validaSenha(senha)
+    let novotoken = await Funcao.atualizajwt(token)
+    let historicoSenha = await AntigaControl.SenhaAntiga(email, senha)
+    let testelog = await LogControl.ValidaAcesso(email)
+    let result
+    console.log({token,nome,email,senha,rota,user,testeEmail,testeSenha,testelog,novotoken,historicoSenha})
+    if(token!=''){s
+        console.log("aqui")
+        novotoken=""
+    }
+    if(user==false||token != ''){
+        return Funcao.padraoErro("usuario não encontrado!!")
+    }
+    if(email!='' && testeEmail.status==400){
+        return testeEmail
+    }
+    if(senha=='' && testeSenha.status==400){
+        return testeSenha
+    }
+    if(historicoSenha.status==400 && rota !="login"&& email!='' && senha!=''){
+        return historicoSenha
+    }
+    if(email!='' && testelog.status == 400){
+        return testelog
+    }
+    console.log(testeSenha.result.senhacripta)
+    // switch (rota) {
+    //     case "inserir":
+    //         await LogControl.deleta(email)
+    //         result = await inserir(nome,email,senha)
+    //         break;
+    //     case "login":
+    //         result = await login(email,senha)
+    //         break;
+    //     case "AlterarSenha":
+    //         result = await LogControl.deleta(email)
+    //         await AlterarSenha(email,senha)
+    //         break;
+    //     case "deleteId":
+    //         await LogControl.deleta(email)
+    //         result = await excluirId(user)
+    //         break;    
+    //     default:
+    //         return padraoErro("Rota não encontrada!!!")
+    // }
+    // if(result.status=400){
+    //     return result
+    // }else{
+        return Funcao.padraoSucesso("result:result.result")
+    //}
+}
+
+
+module.exports = { Validador, excluirUm, listar, listarUm, testeSenha }

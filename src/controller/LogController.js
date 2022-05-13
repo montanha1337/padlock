@@ -52,4 +52,4 @@ async function deleta(email) {
     return Funcao.padraoSucesso({ message: "apagado com sucesso" })
 }
 
-module.exports = { InserirLog, deleta }
+module.exports = { InserirLog, deleta, ValidaAcesso }

@@ -2,11 +2,6 @@ import Jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import ConfigControl from '../controller/config'
 
-var salt = bcrypt.genSaltSync(10)
-async function secretoFuncao() {
-    const secreto = await ConfigControl.palavra()
-    return secreto
-}
 
 
 
@@ -26,6 +21,12 @@ function padraoSucesso(dado) {
     }
 }
 
+var salt = bcrypt.genSaltSync(10)
+async function secretoFuncao() {
+    const secreto = await ConfigControl.palavra()
+    return secreto
+}
+
 async function gerajwt(iduser) {
     if (iduser != "") {
         const carga = iduser
@@ -38,7 +39,7 @@ async function gerajwt(iduser) {
 async function geraSenha(senha) {
     const carga = senha
     const secreto = await secretoFuncao()
-    const token = Jwt.sign({ carga }, secreto, { expiresIn: "2 days" });
+    const token = Jwt.sign({ carga }, secreto, { expiresIn: "30 days" });
     return token
 }
 async function verificajwt(token) {
@@ -51,12 +52,12 @@ async function verificajwt(token) {
     })
     return verificado
 }
-function atualizajwt(token) {
+async function atualizajwt(token) {
     var atualizado = verificajwt(token)
     if (atualizado == false) {
         return atualizado
     }
-    const text = gerajwt(atualizado)
+    const text = await gerajwt(atualizado)
     return text
 }
 
