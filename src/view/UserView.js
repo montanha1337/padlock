@@ -9,7 +9,7 @@ router.post('/inserir', async (req, res) => {
   const email = req.body.email
   const nome = req.body.nome
   const senha = req.body.senha
-  let inserir = await UserControl.inserir(nome, email, senha)
+  let inserir = await UserControl.Validador("", nome, email, senha, "", "inserir")
   res.status(inserir.status).json(inserir)
   
 })
@@ -17,31 +17,37 @@ router.post('/inserir', async (req, res) => {
 router.post('/login', async (req, res) => {
   const email = req.body.email
   const senha = req.body.senha
-  let login = await UserControl.Validador("","",email, senha,"login")
+  let login = await UserControl.Validador("", "", email, senha, "", "login")
   res.status(login.status).json(login)
-
 })
 
 router.put('/alteraSenha', async (req, res) => {
   const email = req.body.email
   const senha = req.body.senha
-  let altera = await UserControl.AlterarSenha(email, senha)
+  const senhaAntiga= req.body.antiga
+  const token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let altera = await UserControl.Validador(token, "", email, senha, senhaAntiga, "AlterarSenha")
   res.status(altera.status).json(altera)
 })
 
 router.delete('/excluirId', async (req, res) => {
   let id = req.headers.authorization.replace(/^Bearer\s/, '');
-  let deleta = await UserControl.excluirId(id)
+  let deleta = await UserControl.Validador(id, "", "", "", "", "deleteId")
 
   res.status(deleta.status).json(deleta)
 })
 
 router.get('/buscarUm', async (req, res) => {
   let id = req.headers.authorization.replace(/^Bearer\s/, '');
-  let busca = await UserControl.listarUm(id)
+  let busca = await UserControl.Validador(id, "", "", "", "", "listarUm")
   res.status(busca.status).json(busca)
 })
 
+router.get('/atualizaToken', async (req, res) => {
+  let token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let credencial = await UserControl.Validador(token, "", "", "", "", "atualizaToken")
+  res.status(credencial.status).json(credencial)
+})
 //#endregion
 
 //#region DESENVOLVIMENTO

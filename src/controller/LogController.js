@@ -1,7 +1,6 @@
 import LogModel from '../model/logs'
 import Funcao from './functions'
 
-
 async function InserirLog(email) {
     let oBuscaLog
     let tentativa = 1
@@ -25,7 +24,6 @@ async function InserirLog(email) {
     }
 }
 
-
 async function ValidaAcesso(email) {
     let result = await LogModel.findOne({ email })
     if (result) {
@@ -33,17 +31,13 @@ async function ValidaAcesso(email) {
         let data1 = Date.parse(data)
         let data2 = Date.parse(result.data)
         let data3 = data1 - data2
-        if (result.tentativa < 3) {
+        if (data3 >= 420000 && result.tentativa < 3) {
             return Funcao.padraoSucesso({ message: "liberado" })
         } else {
-            if (data3 >= 420000) {
-                return Funcao.padraoSucesso({ message: "liberado" })
-            } else {
-                return Funcao.padraoErro("Usuário bloqueado, tente novamente mais tarde")
-            }
+            return Funcao.padraoErro("Usuário bloqueado, tente novamente mais tarde")
         }
     } else {
-        return Funcao.padraoSucesso({ message: "Email nao encontrado." })
+        return Funcao.padraoSucesso({ message: "Email nao encontrado no Log." })
     }
 }
 

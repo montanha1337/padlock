@@ -6,8 +6,7 @@ import mongoose from 'mongoose';
 var cors = require('cors')
 var app = express()
 app.use(express.json());
-app.use(bodyParser.urlencoded({ extended: false }));
-
+app.use(bodyParser.urlencoded({ extended: false }))
 app.use((req, res, next) => {
   req.header("Access-Control-Allow-Origin", "*");
   //Quais são os métodos que a conexão pode realizar na API
@@ -25,17 +24,15 @@ class App {
       useNewUrlParser: true,
       useUnifiedTopology: true,
     });
-
-    this.middlewares();
-    this.routes();
+    this.middlewares()
+    this.routes()
   }
   middlewares() {
-    this.server.use(express.json());
+    this.server.use(express.json())
   }
   routes() {
-
     this.server.use(routes)
   }
 
 }
-module.exports = new App().server;
+module.exports = new App().server

@@ -10,12 +10,12 @@ async function inserir(nome, email, senha, senhaEncripta) {
     result = await login(email, senha)
     if (result.message == "Usuário não cadastrado") {
         nome = await Funcao.encripta(nome)
-            await UserModel.create({ email, nome, senha: senhaEncripta })
-            result = await login(email, senha)
-            return result
-        }else {
-            return result
-        }
+        await UserModel.create({ email, nome, senha: senhaEncripta })
+        result = await login(email, senha)
+        return result
+    } else {
+        return result
+    }
 }
 
 async function login(email, senha) {
@@ -41,23 +41,20 @@ async function login(email, senha) {
     }
 }
 
-async function AlterarSenha(email, senha) {
-    await LogControl.deleta(email)
-    let valida = await login(email, senha)
-    if (valida.status == 200) {
-        return valida
-    } else if (valida.message == "Senha Incorreta" || valida.message == "Senha Expirada") {
-        valida = await Funcao.validaSenha(senha)
-        if (valida.status == 400) {
-            return valida
-        } else {
-            let result = await UserModel.findOne({ email })
-            console.log(valida)
-            if (result) {
-                await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: valida.result.senhacripta })
-                let ologin = await login(email, senha)
-                return ologin
-            }
+async function AlterarSenha(email, senha, senhaAntiga) {
+    let login = await login(email, senha)
+    if (login.status == 200) {
+        return login
+    } else if (login.message == "Senha Incorreta" || login.message == "Senha Expirada") {
+        let antiga = AntigaControl.senhaAntiga(senhaAntiga)
+        if(antiga.status==400){
+            return antiga
+        }
+        let result = await UserModel.findOne({ email })
+        if (result) {
+            await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: valida.result.senhacripta })
+            login = await login(email, senha)
+            return login
         }
     }
 }
@@ -70,13 +67,12 @@ async function excluirId(user) {
 }
 
 async function listarUm(user) {
-    user = await Funcao.verificajwt(user)
-    if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
-    }
+    let formata = new Object();
     user = await UserModel.findById(user)
-    
-    return Funcao.padraoSucesso(user)
+    formata.id = user[0]._id
+    formata.nome= await Funcao.verificajwt(user[0].nome)
+    formata.email = user[0].email
+    return Funcao.padraoSucesso(formata)
 }
 
 //#endregion
@@ -104,59 +100,61 @@ async function listar() {
 //#endregion
 
 
-async function Validador(token, nome, email,senha, rota){
+async function Validador(token, nome, email, senha, senhaAntiga, rota) {
     let user = await Funcao.verificajwt(token)
     let testeEmail = Funcao.validaEmail(email)
-    let testeSenha = Funcao.validaSenha(senha)
-    let novotoken = await Funcao.atualizajwt(token)
+    let testeSenha = await Funcao.validaSenha(senha)
     let historicoSenha = await AntigaControl.SenhaAntiga(email, senha)
-    let testelog = await LogControl.ValidaAcesso(email)
+    let logExp = await LogControl.ValidaAcesso(email)
     let result
-    console.log({token,nome,email,senha,rota,user,testeEmail,testeSenha,testelog,novotoken,historicoSenha})
-    if(token!=''){s
-        console.log("aqui")
-        novotoken=""
+    let atualizaToken
+    if (user == false && token != '') {
+        return Funcao.padraoErro("Credencial invalida!!")
+    } else {
+        atualizaToken = await Funcao.atualizajwt(token)
     }
-    if(user==false||token != ''){
-        return Funcao.padraoErro("usuario não encontrado!!")
-    }
-    if(email!='' && testeEmail.status==400){
+    if (email != '' && testeEmail.status == 400) {
         return testeEmail
     }
-    if(senha=='' && testeSenha.status==400){
+    if (senha != '' && testeSenha.status == 400) {
         return testeSenha
     }
-    if(historicoSenha.status==400 && rota !="login"&& email!='' && senha!=''){
+    if (historicoSenha.status == 400 && rota != "login" && email != '' && senha != '') {
         return historicoSenha
     }
-    if(email!='' && testelog.status == 400){
-        return testelog
+    if (email != '' && logExp.status == 400) {
+        return logExp
     }
-    console.log(testeSenha.result.senhacripta)
-    // switch (rota) {
-    //     case "inserir":
-    //         await LogControl.deleta(email)
-    //         result = await inserir(nome,email,senha)
-    //         break;
-    //     case "login":
-    //         result = await login(email,senha)
-    //         break;
-    //     case "AlterarSenha":
-    //         result = await LogControl.deleta(email)
-    //         await AlterarSenha(email,senha)
-    //         break;
-    //     case "deleteId":
-    //         await LogControl.deleta(email)
-    //         result = await excluirId(user)
-    //         break;    
-    //     default:
-    //         return padraoErro("Rota não encontrada!!!")
-    // }
-    // if(result.status=400){
-    //     return result
-    // }else{
-        return Funcao.padraoSucesso("result:result.result")
-    //}
+
+    switch (rota) {
+        case "inserir":
+            await LogControl.deleta(email)
+            await AntigaControl.SenhaAntiga(email, senha)
+            result = await inserir(nome, email, senha)
+            break;
+        case "login":
+            result = await login(email, senha)
+            break;
+        case "AlterarSenha":
+            result = await LogControl.deleta(email)
+            await AntigaControl.SenhaAntiga(email, senha)
+            await AlterarSenha(email, senha, senhaAntiga)
+            break;
+        case "deleteId":
+            await LogControl.deleta(email)
+            await AntigaControl.deletaAntiga(email)
+            result = await excluirId(user)
+            break
+        case "listarUm":
+            await listarUm(user)
+            break;
+        case "atualizaToken":
+            result = Funcao.padraoSucesso(atualizaToken)
+            break;
+        default:
+            return padraoErro("[Api] Erro ao informar a rota.")
+    }
+    return result
 }
 
 

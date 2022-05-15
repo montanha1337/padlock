@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+
 const PixSchema = new Schema({
   user: String,
   emailUser: String,
@@ -6,4 +7,5 @@ const PixSchema = new Schema({
   pix: String,
   banco: String
 })
+
 export default model('Pix', PixSchema);

@@ -56,7 +56,6 @@ async function organizaDados(nome, email, pix, tipo, nomeBanco, codeBanco, fullN
 }
 
 async function inserir(user, emailUser, pix, banco, tipo) {
-
     let result
     let usuario = new Object()
     let buscaUser
@@ -80,6 +79,7 @@ async function inserir(user, emailUser, pix, banco, tipo) {
     usuario = await organizaDados(buscaUser.nome, buscaUser.email, result.pix, result.tipo, buscaBanco.nome, buscaBanco.code, buscaBanco.fullNome)
     return Funcao.padraoSucesso(usuario)
 }
+
 async function listar(user, emailUser) {
     let pix = new Object()
     let buscaPix
@@ -122,7 +122,6 @@ async function listarUm(user, emailUser, pixBusca) {
     }
     buscaPix = await PixModel.find({ user, emailUser })
     pix.tamanho = buscaPix.length
-
     if (buscaPix[0]) {
         for (let i = 0; i < pix.tamanho; i++) {
             pix.encript = buscaPix[i].pix
@@ -161,6 +160,7 @@ async function excluirId(user, email, pix) {
     tamanho = buscaPix.length
     return Funcao.padraoSucesso(tamanho)
 }
+
 async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     let valida = validaPix(pixNovo, tipo)
     if (valida.validador == false) {
@@ -182,7 +182,6 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
             pix.encript = buscaPix[i].pix
             buscaPix[i].pix = await Funcao.verificajwt(buscaPix[i].pix)
             if (buscaPix[i].pix == pixAntigo) {
-
                 await PixModel.findOneAndUpdate({ user, email, pix: pix.encript }, { pix: pix.novo, tipo, banco })
                 pix.dados = await listarUm(userEncript, email, pixNovo)
                 return Funcao.padraoSucesso(pix.dados)
@@ -194,8 +193,8 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     } else {
         return Funcao.padraoErro("Email inválido.")
     }
-
 }
+
 function testePix(pix, tipo) {
     pix = validaPix(pix, tipo)
     if (pix.validador == true) {
@@ -203,6 +202,5 @@ function testePix(pix, tipo) {
     }
     return Funcao.padraoErro("Pix Inválido")
 }
-
 
 module.exports = { inserir, listar, listarUm, excluirId, editar, testePix }

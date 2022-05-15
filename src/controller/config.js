@@ -6,6 +6,7 @@ async function inserirPalavra(secreta) {
     let secreto = await ConfigModel.create({ secreta, totalBanco })
     return secreto.secreta
 }
+
 async function palavra() {
     let secreta = await ConfigModel.findOne()
     return secreta.secreta
@@ -21,6 +22,7 @@ async function totalBanco() {
     let banco = await ConfigModel.findOne({})
     return banco.totalBanco
 }
+
 async function inserirTipoPix(tipo) {
     let tipoPix = await ConfigPixModel.create({ tipoPix: tipo })
     return tipoPix

@@ -20,14 +20,14 @@ async function validaAntiga(email, senha) {
                 iguais++
             }
         }
-        if(iguais==0){
+        if (iguais == 0) {
             senha = await Funcao.encripta(senha)
-            let add = await AntigaModel.updateOne({ email }, { $push: { senha:{senha} } })
+            let add = await AntigaModel.updateOne({ email }, { $push: { senha: { senha } } })
             if (add.matchedCount !== 1) {
                 return Funcao.padraoErro("Não possivel adicionar a senha.")
             }
-             return Funcao.padraoSucesso("Senha nunca utilizada")
-        }else{
+            return Funcao.padraoSucesso("Senha nunca utilizada")
+        } else {
             return Funcao.padraoErro("Senha já utilizada.")
         }
     } else {
@@ -36,9 +36,6 @@ async function validaAntiga(email, senha) {
 }
 
 async function SenhaAntiga(email, senha) {
-
-    //#region Valida Senha
-
     let senhaDescript = await Funcao.verificajwt(senha)
     if (senhaDescript == false) {
         senha = await Funcao.validaSenha(senha)
@@ -50,23 +47,19 @@ async function SenhaAntiga(email, senha) {
         return senha
     }
     senha = senha.result.senha
-    //#endregion
-
-    //#region Valida Email
-
     let result = await AntigaModel.find({ email })
-    if (result[0] != null) {       
+    if (result[0] != null) {
         return await validaAntiga(email, senha)
     } else {
         return await inserir(email, senha)
     }
 }
 
- async function DeletaAntiga(email){
+async function DeletaAntiga(email) {
     let result = await AntigaModel.find({ email })
-    if (result[0] != null) {  
-     await AntigaModel.findOneAndDelete({email})
+    if (result[0] != null) {
+        await AntigaModel.findOneAndDelete({ email })
     }
- }
+}
 
 module.exports = { SenhaAntiga, DeletaAntiga }

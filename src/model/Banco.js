@@ -1,4 +1,5 @@
 import { Schema, model } from 'mongoose'
+
 const BancoSchema = new Schema({
   nome: String,
   code: String,

@@ -4,7 +4,6 @@ import PixControl from './pixController'
 
 async function formataDados(pix, tipo) {
     pix = await Funcao.verificajwt(pix)
-
     if (pix == false) {
         return Funcao.padraoErro("Chave pix incorreta")
     }
@@ -53,6 +52,7 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
         return Funcao.padraoErro("Não possivel completar a adição.")
     }
 }
+
 async function listar(IdUser) {
     let listar = new Object()
     let id
@@ -118,6 +118,5 @@ async function excluirPix(user,pix) {
     let result = await ContatoModel.findOneAndDelete({IdUser:user,pix:{pix}})
     return Funcao.padraoSuucesso(result)
 }
-
 
 module.exports = { inserir, adicionarPix, EditarContato, listar, listarUm, excluirContato, excluirPix }

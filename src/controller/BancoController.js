@@ -16,15 +16,12 @@ async function inserir() {
         nome = banco.dados[i].name
         code = banco.dados[i].code
         fullNome = banco.dados[i].fullName
-
         pesquisa = await BancoModel.findOne({ code })
         if (!pesquisa) {
             bancos = await BancoModel.create({ nome, code, fullNome })
         }
-
     }
     banco = await listar()
-
     return banco
 }
 
@@ -59,6 +56,5 @@ async function listarUm(code) {
         return Funcao.padraoSucesso(banco)
     }
 }
-
 
 module.exports = { inserir, listar, excluir, listarUm }

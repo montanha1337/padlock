@@ -2,9 +2,6 @@ import Jwt from 'jsonwebtoken'
 import bcrypt from 'bcrypt'
 import ConfigControl from '../controller/config'
 
-
-
-
 function padraoErro(mensagem) {
     return {
         status: 400,
@@ -21,7 +18,6 @@ function padraoSucesso(dado) {
     }
 }
 
-var salt = bcrypt.genSaltSync(10)
 async function secretoFuncao() {
     const secreto = await ConfigControl.palavra()
     return secreto
@@ -36,12 +32,14 @@ async function gerajwt(iduser) {
     }
     return padraoErro("Não foi possivel gerar o token id vazio")
 }
+
 async function geraSenha(senha) {
     const carga = senha
     const secreto = await secretoFuncao()
     const token = Jwt.sign({ carga }, secreto, { expiresIn: "30 days" });
     return token
 }
+
 async function verificajwt(token) {
     const secreto = await secretoFuncao()
     var verificado = Jwt.verify(token, secreto, (err, decoded) => {
@@ -52,6 +50,7 @@ async function verificajwt(token) {
     })
     return verificado
 }
+
 async function atualizajwt(token) {
     var atualizado = verificajwt(token)
     if (atualizado == false) {
@@ -76,9 +75,6 @@ function validaCpf(cpf) {
     if (cpf.length !== 11) {
         return false
     }
-    if (cpf == "00000000000") {
-        return false
-    }
     for (i = 1; i <= 9; i++) {
         Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (11 - i);
     }
@@ -95,7 +91,6 @@ function validaCpf(cpf) {
         Soma = Soma + parseInt(cpf.substring(i - 1, i)) * (12 - i);
     }
     Resto = (Soma * 10) % 11;
-
     if ((Resto == 10) || (Resto == 11)) {
         Resto = 0;
     }
@@ -109,25 +104,10 @@ function validaCnpj(cnpj) {
     let i
     let resultado
     cnpj = cnpj.replace(/[^\d]+/g, '');
-
-    if (cnpj == '') return false;
-
+    if (cnpj == '') 
+        return false;
     if (cnpj.length !== 14)
         return false;
-
-    // Elimina CNPJs invalidos conhecidos
-    if (cnpj == "00000000000000" ||
-        cnpj == "11111111111111" ||
-        cnpj == "22222222222222" ||
-        cnpj == "33333333333333" ||
-        cnpj == "44444444444444" ||
-        cnpj == "55555555555555" ||
-        cnpj == "66666666666666" ||
-        cnpj == "77777777777777" ||
-        cnpj == "88888888888888" ||
-        cnpj == "99999999999999")
-        return false;
-
     // Valida DVs
     let tamanho = cnpj.length - 2
     let numeros = cnpj.substring(0, tamanho);
@@ -155,10 +135,9 @@ function validaCnpj(cnpj) {
     resultado = soma % 11 < 2 ? 0 : 11 - soma % 11;
     if (resultado != digitos.charAt(1))
         return false;
-
     return true;
-
 }
+
 function validaEmail(email) {
     if (email != undefined) {
         let valida = new Object()
@@ -169,7 +148,6 @@ function validaEmail(email) {
         valida.arrobaTam = valida.arroba.length
         valida.pontoTam = valida.ponto.length
         valida.teste = valida.arroba[0].length
-
         for (let i = 0; i < valida.tamanho; i++) {
             if (valida.email[i] == '@' && valida.arrobaTam !== 1 && valida.pontoTam !== 1 && valida.tamanho > 11 && valida.arroba[0].length >= 6) {
                 for (let i = 0; i < valida.pontoTam; i++) {
@@ -178,7 +156,6 @@ function validaEmail(email) {
                         return padraoSucesso({ email: valida.email })
                     }
                 }
-
             }
         }
         return padraoErro("Email Inválido")
@@ -220,7 +197,7 @@ async function validaSenha(senha) {
         }
         if (valida.numero == true && valida.letraMaiuscula == true) {
             valida.cripto = await geraSenha(senha)
-            valida.dado = { senha: valida.senha, senhacripta: valida.cripto}
+            valida.dado = { senha: valida.senha, senhacripta: valida.cripto }
             return padraoSucesso(valida.dado)
         } else {
             if (valida.numero == false && valida.letraMaiuscula != false) valida.mensagem += valida.mensagem1 + "."
@@ -232,6 +209,5 @@ async function validaSenha(senha) {
         return padraoErro("Senha deve conter 8 digitos")
     }
 }
-
 
 module.exports = { padraoErro, padraoSucesso, gerajwt, verificajwt, atualizajwt, encripta, validaCpf, validaCnpj, validaEmail, validaSenha }
