@@ -33,7 +33,6 @@ router.put('/alteraSenha', async (req, res) => {
 router.delete('/excluirId', async (req, res) => {
   let id = req.headers.authorization.replace(/^Bearer\s/, '');
   let deleta = await UserControl.Validador(id, "", "", "", "", "deleteId")
-
   res.status(deleta.status).json(deleta)
 })
 

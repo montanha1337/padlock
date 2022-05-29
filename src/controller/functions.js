@@ -1,5 +1,4 @@
 import Jwt from 'jsonwebtoken'
-import bcrypt from 'bcrypt'
 import ConfigControl from '../controller/config'
 
 function padraoErro(mensagem) {
@@ -42,7 +41,7 @@ async function geraSenha(senha) {
 
 async function verificajwt(token) {
     const secreto = await secretoFuncao()
-    var verificado = Jwt.verify(token, secreto, (err, decoded) => {
+    var verificado = await Jwt.verify(token, secreto, (err, decoded) => {        
         if (decoded) {
             return decoded.carga
         }
@@ -210,4 +209,4 @@ async function validaSenha(senha) {
     }
 }
 
-module.exports = { padraoErro, padraoSucesso, gerajwt, verificajwt, atualizajwt, encripta, validaCpf, validaCnpj, validaEmail, validaSenha }
+module.exports = { padraoErro, padraoSucesso, gerajwt, geraSenha, verificajwt, atualizajwt, encripta, validaCpf, validaCnpj, validaEmail, validaSenha }

@@ -29,12 +29,12 @@ async function ValidaAcesso(email) {
     if (result) {
         let data = new Date()
         let data1 = Date.parse(data)
-        let data2 = Date.parse(result.data)
-        let data3 = data1 - data2
-        if (data3 >= 420000 && result.tentativa < 3) {
-            return Funcao.padraoSucesso({ message: "liberado" })
-        } else {
+        let data2 = result.data
+        data = data1 - data2
+        if (data >= 420000 && result.tentativa > 3) {
             return Funcao.padraoErro("Usuário bloqueado, tente novamente mais tarde")
+        } else {
+            return Funcao.padraoSucesso({ message: "liberado" })
         }
     } else {
         return Funcao.padraoSucesso({ message: "Email nao encontrado no Log." })

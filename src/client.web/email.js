@@ -1,16 +1,13 @@
-import  Axios from "axios";
+import Axios from "axios";
 //https://brasilapi.com.br/api/banks/v1
-async function buscarBancos(){
+async function enviarEmail() {
     let response
     const article = { title: 'Axios POST Request Example' };
-    const headers = { 
+    const headers = {
         'Authorization': 'Bearer my-token',
         'My-Custom-Header': 'foobar'
     };
     response = await Axios.post('https://brasilapi.com.br/api/banks/v1', article, { headers })
     return response.data
 }
-
-
-
-module.exports = {buscarBancos}
+module.exports = { enviarEmail }
