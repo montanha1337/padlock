@@ -36,7 +36,7 @@ async function listar() {
         await excluir()
         await inserir()
         banco.lista = await listar()
-        return padraoSucesso(banco.lista)
+        return Funcao.padraoSucesso(banco.lista)
     }
 }
 

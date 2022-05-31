@@ -48,8 +48,14 @@ router.get('/buscarUm', async (req, res) => {
   res.status(busca.status).json(busca)
 })
 
-router.get('/atualizaToken', async (req, res) => {
-  let token = req.headers.authorization.replace(/^Bearer\s/, '');
+router.post('/atualizaToken', async (req, res) => {
+  let token = req.body.authorization
+  if(token==null || token== ""||token==undefined)
+  token = req.headers.authorization
+  if(!token==null || !token== ""||!token==undefined)
+  token.replace(/^Bearer\s/, '');
+  else
+  token = "naoExiste"
   let credencial = await UserControl.Validador(token, "", "", "", "", "atualizaToken")
   res.status(credencial.status).json(credencial)
 })
