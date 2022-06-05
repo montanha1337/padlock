@@ -49,7 +49,7 @@ router.get('/buscarUm', async (req, res) => {
 })
 
 router.post('/atualizaToken', async (req, res) => {
-  let token = req.body.authorization
+  let token = req.body.token
   if(token==null || token== ""||token==undefined)
   token = req.headers.authorization
   if(!token==null || !token== ""||!token==undefined)

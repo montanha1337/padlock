@@ -2,7 +2,7 @@
   "name": "padlock",
   "version": "1.0.0",
   "engines": {
-    "node": "14.16.0"
+    "node": "16.15.1"
   },
   "main": "index.js",
   "license": "MIT",

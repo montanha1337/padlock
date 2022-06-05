@@ -203,4 +203,8 @@ function testePix(pix, tipo) {
     return Funcao.padraoErro("Pix Inválido")
 }
 
-module.exports = { inserir, listar, listarUm, excluirId, editar, testePix }
+async function listarTipoPix(){
+
+}
+
+module.exports = { inserir, listar, listarUm, excluirId, editar, testePix, listarTipoPix }
