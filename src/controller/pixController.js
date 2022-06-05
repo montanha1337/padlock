@@ -3,6 +3,7 @@ import PixModel from '../model/Pix'
 import UserControl from './userController'
 import BancoControl from './BancoController'
 import validator from "validar-telefone"
+import ConfigControl from "./config"
 
 function validaPix(pix, tipo) {
     let valida = new Object()
@@ -203,8 +204,13 @@ function testePix(pix, tipo) {
     return Funcao.padraoErro("Pix Inválido")
 }
 
-async function listarTipoPix(){
-
+async function listarTipoPix() {
+    let result = await ConfigControl.listarTipoPix()
+    console.log(result.length)
+    if (result.length> 1)
+        return Funcao.padraoSucesso(result)
+    else
+        return Funcao.padraoErro("Não foi possivel retornar os dados.")
 }
 
 module.exports = { inserir, listar, listarUm, excluirId, editar, testePix, listarTipoPix }

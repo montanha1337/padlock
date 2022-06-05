@@ -1,6 +1,5 @@
 import express from 'express'
 import PixControl from '../controller/pixController'
-import ConfigControl from '../controller/config'
 
 const router = express.Router()
 
@@ -51,7 +50,7 @@ router.post('/validapix', async (req, res) => {
   res.status(valida.status).json(valida)
 })
 router.get('/listartipopix', async (req, res) => {
-  let tipo = await ConfigControl.listarTipoPix()
+  let tipo = await PixControl.listarTipoPix()
   res.status(tipo.status).json(tipo)
 })
 
