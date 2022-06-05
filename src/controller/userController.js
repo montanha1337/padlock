@@ -92,9 +92,9 @@ async function excluirId(user) {
 async function listarUm(user) {
     let formata = new Object();
     user = await UserModel.findById(user)
-    formata.id = user[0]._id
-    formata.nome = await Funcao.verificajwt(user[0].nome)
-    formata.email = user[0].email
+    formata.id = user.id
+    formata.nome = await Funcao.verificajwt(user.nome)
+    formata.email = user.email
     return Funcao.padraoSucesso(formata)
 }
 
