@@ -129,7 +129,6 @@ async function Validador(token, nome, email, senha, senhaAntiga, rota) {
     let logExp = await LogControl.ValidaAcesso(email)
     let result
     let atualizaToken
-    console.log(user, token)
     if (user == false && token != '') {
         return Funcao.padraoErro("Credencial invalida!!")
     } else {

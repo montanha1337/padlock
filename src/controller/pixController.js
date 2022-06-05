@@ -96,7 +96,7 @@ async function listar(user, emailUser) {
     pix.lista = buscaPix
     if (buscaPix[0]) {
         for (let i = 0; i < pix.tamanho; i++) {
-            buscaUser = await UserControl.listarUm(user)
+            buscaUser = await UserControl.listarUm(userdescript)
             if (buscaUser.status == 400) {
                 return buscaUser
             }
