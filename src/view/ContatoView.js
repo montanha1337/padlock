@@ -49,5 +49,11 @@ router.delete('/deletarPix', async (req, res) => {
   res.status(deletar.status).json(deletar)
 })
 
+router.get('/listarContato', async (req, res) => {
+  let token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let listar = await ContatoControl.listarContato(token)
+  res.status(listar.status).json(listar)
+})
+
 
 module.exports = router

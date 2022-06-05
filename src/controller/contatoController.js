@@ -10,7 +10,7 @@ async function formataDados(pix, tipo) {
     let format = new Object()
     format.pix = pix
     format.tipo = tipo
-    return Funcao.padraoSucesso(format)
+    return format
 }
 
 async function inserir(IdUser, nome, pixNovo, tipo) {
@@ -67,7 +67,22 @@ async function listar(IdUser) {
         listar[i] = await formataDados( lista[0].pix[i].pix, lista[0].pix[i].tipo)
     }
     IdUser = await Funcao.gerajwt(IdUser)
-    return Funcao.padraoSucesso({token:IdUser,tokenContato : id, Contato: lista[0].nome, pix: listar })
+    return Funcao.padraoSucesso({token:IdUser, Contato: lista[0].nome, pix: listar })
+}
+
+async function listarContato(IdUser) {
+    let listar = new Object()
+    listar = []
+    IdUser = await Funcao.verificajwt(IdUser)
+    if (IdUser == false) {
+        return Funcao.padraoErro("Usuario não identificado!!!")
+    }
+    let lista = await ContatoModel.find({ IdUser })
+    for (let i = 0; i < lista[0].pix.length; i++) {
+        listar[i] = {Nome:lista[i].nome}
+    }
+    IdUser = await Funcao.gerajwt(IdUser)
+    return Funcao.padraoSucesso({token:IdUser, Contato: listar})
 }
 
 async function EditarContato(user,contato,nome){
@@ -118,4 +133,4 @@ async function excluirPix(user,pix) {
     return Funcao.padraoSuucesso(result)
 }
 
-module.exports = { inserir, adicionarPix, EditarContato, listar, listarUm, excluirContato, excluirPix }
+module.exports = { inserir, adicionarPix, EditarContato, listar, listarContato, listarUm, excluirContato, excluirPix }
