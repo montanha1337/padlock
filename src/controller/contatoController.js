@@ -61,7 +61,6 @@ async function listar(IdUser) {
     if (IdUser == false) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
-    I
     let lista = await ContatoModel.find({ IdUser })
     id= await Funcao.gerajwt(lista[0].id)
     for (let i = 0; i < lista[0].pix.length; i++) {
