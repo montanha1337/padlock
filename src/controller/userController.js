@@ -94,7 +94,7 @@ async function listarUm(user) {
     let user1 = await UserModel.findById(user)
     formata.id = user
     formata.nome = await Funcao.verificajwt(user1.nome)
-    formata.email = user1.email
+    formata.email = await Funcao.verificajwt(user1.email)
     return Funcao.padraoSucesso(formata)
 }
 
