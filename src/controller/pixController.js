@@ -39,26 +39,17 @@ function validaPix(pix, tipo) {
     }
 }
 
-async function organizaDados(nome, email, pix, tipo, nomeBanco, codeBanco, fullNome) {
+async function organizaDados(pix, tipo, nomeBanco) {
     let organiza = new Object()
-    let usuario = new Object()
-    let banco = new Object()
-    pix = await Funcao.verificajwt(pix)
-    usuario.nome = nome
-    usuario.email = email
-    banco.nome = nomeBanco
-    banco.codigo = codeBanco
-    banco.nomeCompleto = fullNome
-    organiza.usuario = usuario
-    organiza.banco = banco
     organiza.pix = pix
     organiza.tipoPix = tipo
+    organiza.banco = nomeBanco
     return organiza
 }
 
 async function inserir(user, emailUser, pix, banco, tipo) {
     let result
-    let usuario = new Object()
+    let inserir = new Object()
     let buscaUser
     let buscaBanco
     let valida = validaPix(pix, tipo)
@@ -75,17 +66,21 @@ async function inserir(user, emailUser, pix, banco, tipo) {
         return Funcao.padraoErro("Quantidade de pix cadastrados excede o limite para este banco.")
     }
     result = await PixModel.create({ user, emailUser, tipo, pix, banco })
-    buscaUser = await UserControl.listarUm(user)
+    buscaUser = await Funcao.atualizajwt(user)
     buscaBanco = await BancoControl.listarUm(banco)
-    usuario = await organizaDados(buscaUser.nome, buscaUser.email, result.pix, result.tipo, buscaBanco.nome, buscaBanco.code, buscaBanco.fullNome)
-    return Funcao.padraoSucesso(usuario)
+    pix = await Funcao.verificajwt(pix)
+    inserir = await organizaDados( pix, tipo, buscaBanco.result.fullNome)
+    inserir.token = buscaUser
+    return Funcao.padraoSucesso(inserir)
 }
 
 async function listar(user, emailUser) {
     let pix = new Object()
+    let listar = new Object()
     let buscaPix
     let buscaUser
     let buscaBanco
+    let pixdescript
     let userdescript = await Funcao.verificajwt(user)
     if (userdescript == false) {
         return Funcao.padraoErro("Usuario não identificado!!!")
@@ -95,19 +90,20 @@ async function listar(user, emailUser) {
     pix.tamanho = buscaPix.length
     pix.lista = buscaPix
     if (buscaPix[0]) {
+        buscaUser = await Funcao.atualizajwt(user)
         for (let i = 0; i < pix.tamanho; i++) {
-            buscaUser = await UserControl.listarUm(userdescript)
-            if (buscaUser.status == 400) {
-                return buscaUser
-            }
             buscaBanco = await BancoControl.listarUm(pix.dados[i].banco)
             if (buscaBanco.status == 400) {
                 return buscaBanco
             }
-            pix.lista[i] = await organizaDados(buscaUser, pix.dados[i].pix, pix.dados[i].tipo, buscaBanco)
-            
+            pixdescript = await Funcao.verificajwt(pix.dados[i].pix)
+            pix.lista[i] = await organizaDados(pixdescript, pix.dados[i].tipo,buscaBanco.result.fullNome)
+            buscaBanco=""
         }
-        return Funcao.padraoSucesso(pix.lista)
+        listar.token = buscaUser
+        listar.pix = pix.lista
+        
+        return Funcao.padraoSucesso(listar)
     } else {
         return Funcao.padraoErro("Não foi encontrado registros para este usuário.")
     }

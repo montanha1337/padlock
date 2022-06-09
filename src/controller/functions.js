@@ -62,7 +62,7 @@ async function atualizajwt(token) {
 async function encripta(dado) {
     const carga = dado
     const secreto = await secretoFuncao()
-    const token = Jwt.sign({ carga }, secreto, { expiresIn: "5000 days" });
+    const token = Jwt.sign({ carga }, secreto, { expiresIn: "1 year" });
     return token
 }
 
