@@ -107,7 +107,6 @@ async function listar(user, emailUser) {
             pix.lista[i] = await organizaDados(buscaUser, pix.dados[i].pix, pix.dados[i].tipo, buscaBanco)
             
         }
-        console.log(pix.lista)
         return Funcao.padraoSucesso(pix.lista)
     } else {
         return Funcao.padraoErro("Não foi encontrado registros para este usuário.")
