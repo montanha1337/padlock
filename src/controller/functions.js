@@ -3,7 +3,7 @@ import ConfigControl from '../controller/config'
 
 function padraoErro(mensagem) {
     return {
-        status: 400,
+        status: 200,
         message: mensagem,
         result: null
     }
