@@ -16,7 +16,7 @@ router.put('/editarNome', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
   let id =req.body.contato
   let nome = req.body.nome
-  let deletar = await EditarContato(token.id,nome)
+  let deletar = await ContatoControl.EditarContato(token,id,nome)
   res.status(deletar.status).json(deletar)
 })
 
@@ -38,14 +38,14 @@ router.get('/listar', async (req, res) => {
 router.delete('/deletar', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
   let id =req.body.contato
-  let deletar = await excluirContato(token,id)
+  let deletar = await ContatoControl.excluirContato(token,id)
   res.status(deletar.status).json(deletar)
 })
 
 router.delete('/deletarPix', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
   let pix =req.body.pix
-  let deletar = await excluirPix(token,pix)
+  let deletar = await ContatoControl.excluirPix(token,pix)
   res.status(deletar.status).json(deletar)
 })
 

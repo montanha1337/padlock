@@ -48,9 +48,10 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     pix.tipo = tipo
     inserir.adicionar = await ContatoModel.updateOne({ IdUser, nome }, { $push: { pix: pix } })
     if (inserir.adicionar.matchedCount !== 1) {
-        console.log(inserir.adicionar)
         return Funcao.padraoErro("Não possivel completar a adição.")
     }
+    IdUser = await Funcao.gerajwt(IdUser)
+    return Funcao.padraoSucesso({token: IdUser})
 }
 
 async function listar(IdUser) {
@@ -94,7 +95,8 @@ async function EditarContato(user,contato,nome){
     if(contato==false){
         return Funcao.padraoErro("Contato não Encontrado")
     }
-    await ContatoModel.findOneAndUpdate({IdUser:user,_id:contato})
+    await ContatoModel.findOneAndUpdate({IdUser:user,_id:contato},{nome})
+    return Funcao.padraoSucesso()
 }
 
 async function listarUm(user,contato) {
