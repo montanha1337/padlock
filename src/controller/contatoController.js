@@ -63,6 +63,9 @@ async function listar(IdUser) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     let lista = await ContatoModel.find({ IdUser })
+    if(lista == ""){
+        return Funcao.padraoErro("Não foi encontrados contatos para este usuario.")
+    }
     id= await Funcao.gerajwt(lista[0].id)
     for (let i = 0; i < lista[0].pix.length; i++) {
         listar[i] = await formataDados( lista[0].pix[i].pix, lista[0].pix[i].tipo)
