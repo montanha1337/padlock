@@ -29,11 +29,12 @@ router.post('/adicionarPix', async (req, res) => {
   res.status(inserir.status).json(inserir)
 })
 
-router.get('/listarNome', async (req, res) => {
+router.get('/listar', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
   let listar = await ContatoControl.listar(token)
   res.status(listar.status).json(listar)
 })
+
 
 router.delete('/deletar', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
