@@ -9,6 +9,7 @@ router.post('/inserir', async (req, res) => {
   const pix = req.body.pix
   const idBanco = req.body.idBanco
   const tipo = req.body.tipo
+  console.log(idUser, email, pix, idBanco, tipo)
   let inserir = await PixControl.inserir(idUser, email, pix, idBanco, tipo)
   res.status(inserir.status).json(inserir)
 })

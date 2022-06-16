@@ -174,7 +174,6 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     buscaPix = await PixModel.find({ user, email })
     pix.tamanho = buscaPix.length
     pix.novo = await Funcao.encripta(pixNovo)
-
     if (buscaPix[0]) {
         for (let i = 0; i < pix.tamanho; i++) {
             pix.encript = buscaPix[i].pix
@@ -189,7 +188,7 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
         }
         return Funcao.padraoSucesso(pix.dados)
     } else {
-        return Funcao.padraoErro("Email inválido.")
+        return Funcao.padraoErro("Não existe pix para este usuario.")
     }
 }
 
