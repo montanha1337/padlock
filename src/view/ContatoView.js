@@ -29,9 +29,10 @@ router.post('/adicionarPix', async (req, res) => {
   res.status(inserir.status).json(inserir)
 })
 
-router.get('/listar', async (req, res) => {
+router.post('/listarPix', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
-  let listar = await ContatoControl.listar(token)
+  let contato = req.body.contato
+  let listar = await ContatoControl.listar(token,contato)
   res.status(listar.status).json(listar)
 })
 

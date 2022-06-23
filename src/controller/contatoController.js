@@ -54,7 +54,7 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     return Funcao.padraoSucesso({token: IdUser})
 }
 
-async function listar(IdUser) {
+async function listar(IdUser,contato) {
     let listar = new Object()
     let id
     listar = []
@@ -62,7 +62,7 @@ async function listar(IdUser) {
     if (IdUser == false) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
-    let lista = await ContatoModel.find({ IdUser })
+    let lista = await ContatoModel.find({ IdUser, nome: contato })
     if(lista == ""){
         return Funcao.padraoErro("Não foi encontrados contatos para este usuario.")
     }
