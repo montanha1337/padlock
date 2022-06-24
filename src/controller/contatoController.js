@@ -119,17 +119,19 @@ async function listarUm(user,contato) {
     return Funcao.padraoSucesso(listar)
 }
 
-async function excluirContato(idUser,idContato) {
+async function excluirContato(idUser,Contato) {
     idUser = await Funcao.verificajwt(idUser)
-    if(idUser==false){
+
+    if(idUser==false)
         return Funcao.padraoErro("Usuario não Encontrado")
-    }
-    idContato = await Funcao.verificajwt(idContato)
-    if(idContato==false){
-        return Funcao.padraoErro("Contato não Encontrado")
-    }
-    await ContatoModel.findOneAndDelete({_id:idContato,IdUser:idUser})
-    return Funcao.padraoSucesso({message:"Deletado com sucesso"})
+
+    await ContatoModel.deleteMany({IdUser:idUser,nome:Contato})
+    let busca = await ContatoModel.find({IdUser:idUser,nome:Contato})
+
+    if(busca=="")
+        return Funcao.padraoSucesso({message:"Deletado com sucesso"})
+    else 
+        return Funcao.padraoErro({message:"Erro ao deletar"})
 }
 
 async function excluirPix(user,pix) {
@@ -138,7 +140,7 @@ async function excluirPix(user,pix) {
         return Funcao.padraoErro("Usuario não identificado!!!")
     }
     let result = await ContatoModel.findOneAndDelete({IdUser:user,pix:{pix}})
-    return Funcao.padraoSuucesso(result)
+    return Funcao.padraoSucesso(result)
 }
 
 module.exports = { inserir, adicionarPix, EditarContato, listar, listarContato, listarUm, excluirContato, excluirPix }

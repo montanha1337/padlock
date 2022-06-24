@@ -39,8 +39,8 @@ router.post('/listarPix', async (req, res) => {
 
 router.delete('/deletar', async (req, res) => {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
-  let id =req.body.contato
-  let deletar = await ContatoControl.excluirContato(token,id)
+  let nome =req.body.nome
+  let deletar = await ContatoControl.excluirContato(token,nome)
   res.status(deletar.status).json(deletar)
 })
 
