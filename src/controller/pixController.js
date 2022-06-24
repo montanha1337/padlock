@@ -202,7 +202,6 @@ function testePix(pix, tipo) {
 
 async function listarTipoPix() {
     let result = await ConfigControl.listarTipoPix()
-    console.log(result.length)
     if (result.length> 1)
         return Funcao.padraoSucesso(result)
     else
