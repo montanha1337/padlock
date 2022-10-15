@@ -7,7 +7,7 @@
     },
     "servers": [
         {
-            "url": "https://padlocksecurity.herokuapp.com",
+            "url": "https://lock-pix.onrender.com/",
             "description": "Api produção"
         },
         {

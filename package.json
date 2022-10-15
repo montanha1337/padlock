@@ -3,13 +3,13 @@
   "name": "padlock",
   "version": "2.0.0",
   "engines": {
-    "node": "v16.13.1"
+    "node": "v16.16.0"
   },
   "main": "index.js",
   "license": "MIT",
   "scripts": {
     "start": "node -r sucrase/register ./src/server.js",
-    "dev": "nodemon ./src/server.js",
+    "dev": "nodemon ./src/server.js"
   },
   "dependencies": {
     "axios": "^0.26.0",

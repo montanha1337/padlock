@@ -1,0 +1,60 @@
+Arguments: 
+  C:\Program Files\nodejs\node.exe C:\Users\Montanha\AppData\Roaming\npm\node_modules\yarn\bin\yarn.js install
+
+PATH: 
+  C:\Python310\Scripts\;C:\Python310\;C:\Program Files\Eclipse Adoptium\jre-8.0.342.7-hotspot\bin;C:\Program Files\Eclipse Adoptium\jre-11.0.16.8-hotspot\bin;C:\Program Files (x86)\Eclipse Adoptium\jre-8.0.332.9-hotspot\bin;C:\Windows\system32;C:\Windows;C:\Windows\System32\Wbem;C:\Windows\System32\WindowsPowerShell\v1.0\;C:\Windows\System32\OpenSSH\;C:\Program Files\NVIDIA Corporation\NVIDIA NvDLISR;C:\Program Files\nodejs\;C:\ProgramData\chocolatey\bin;C:\Program Files\Git\cmd;C:\Program Files\Microsoft SQL Server\150\Tools\Binn\;C:\Program Files\Microsoft SQL Server\Client SDK\ODBC\170\Tools\Binn\;C:\Program Files\dotnet\;C:\Program Files (x86)\dotnet\;C:\Users\Montanha\AppData\Local\Microsoft\WindowsApps;C:\Users\Montanha\AppData\Roaming\npm;C:\Users\Montanha\AppData\Local\Programs\Microsoft VS Code\bin;C:\Users\Montanha\.dotnet\tools;C:\Program Files\JetBrains\IntelliJ IDEA Community Edition 2022.2.2\bin;C:\flutter\bin;C:\Program Files\heroku\bin;C:\tools\dart-sdk\bin;C:\Users\Montanha\AppData\Roaming\Pub\Cache\bin;
+
+Yarn version: 
+  1.22.19
+
+Node version: 
+  16.16.0
+
+Platform: 
+  win32 x64
+
+Trace: 
+  SyntaxError: C:\Users\Montanha\Desenvolvimento\padlock-1\package.json: Unexpected token } in JSON at position 243
+      at JSON.parse (<anonymous>)
+      at C:\Users\Montanha\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:1629:59
+      at Generator.next (<anonymous>)
+      at step (C:\Users\Montanha\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:310:30)
+      at C:\Users\Montanha\AppData\Roaming\npm\node_modules\yarn\lib\cli.js:321:13
+
+npm manifest: 
+  {
+    "name": "padlock",
+    "version": "2.0.0",
+    "engines": {
+      "node": "v16.13.1"
+    },
+    "main": "index.js",
+    "license": "MIT",
+    "scripts": {
+      "start": "node -r sucrase/register ./src/server.js",
+      "dev": "nodemon ./src/server.js",
+    },
+    "dependencies": {
+      "axios": "^0.26.0",
+      "bcrypt": "^5.0.1",
+      "cors": "^2.8.5",
+      "express": "^4.17.1",
+      "jsonwebtoken": "^8.5.1",
+      "mongoose": "^6.2.0",
+      "sequelize": "^6.6.5",
+      "sequelize-cli": "^6.2.0",
+      "sucrase": "^3.16.0",
+      "swagger-ui-express": "^4.3.0",
+      "validar-telefone": "^0.1.0"
+    },
+    "devDependencies": {
+      "nodemon": "^2.0.7",
+      "sequelize-cli": "^6.2.0"
+    }
+  }
+
+yarn manifest: 
+  No manifest
+
+Lockfile: 
+  No lockfile
