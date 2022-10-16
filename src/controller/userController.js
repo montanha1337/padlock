@@ -45,7 +45,8 @@ async function login(email, senha) {
             return oSenhaBd
 
         if (oSenhaBd.result == senha) {
-            token = await Framework.ManipularToken("criar", oBuscarUser._id)
+            oBuscarUser = oBuscarUser._id.toString()
+            token = await Framework.ManipularToken("criar", oBuscarUser)
             await LogControl.deleta(email)
             return Framework.PadronizarRetorno("sucesso", 200, { token: token.result })
         } else {
