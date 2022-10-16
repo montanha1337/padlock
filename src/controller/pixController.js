@@ -54,16 +54,16 @@ async function inserir(user, emailUser, pix, banco, tipo) {
     let buscaBanco
     let valida = validaPix(pix, tipo)
     if (valida.validador == false) {
-        return Funcao.padraoErro(valida.mensagem)
+        return Funcao.PadronizarRetorno("erro", 400, valida.mensagem)
     }
     pix = await Funcao.encripta(pix)
     user = await Funcao.verificajwt(user)
     if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+        return Funcao.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
     valida = await PixModel.find({ user, emailUser, banco })
     if (valida.length > 5) {
-        return Funcao.padraoErro("Quantidade de pix cadastrados excede o limite para este banco.")
+        return Funcao.PadronizarRetorno("erro", 400, "Quantidade de pix cadastrados excede o limite para este banco.")
     }
     result = await PixModel.create({ user, emailUser, tipo, pix, banco })
     buscaUser = await Funcao.atualizajwt(user)
@@ -71,7 +71,7 @@ async function inserir(user, emailUser, pix, banco, tipo) {
     pix = await Funcao.verificajwt(pix)
     inserir = await organizaDados( pix, tipo, buscaBanco.result.fullNome)
     inserir.token = buscaUser
-    return Funcao.padraoSucesso(inserir)
+    return Funcao.PadronizarRetorno("sucesso",200,inserir)
 }
 
 async function listar(user, emailUser) {
@@ -83,7 +83,7 @@ async function listar(user, emailUser) {
     let pixdescript
     let userdescript = await Funcao.verificajwt(user)
     if (userdescript == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+        return Funcao.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
     buscaPix = await PixModel.find({ userdescript, emailUser })
     pix.dados = buscaPix
@@ -103,9 +103,9 @@ async function listar(user, emailUser) {
         listar.token = buscaUser
         listar.pix = pix.lista
         
-        return Funcao.padraoSucesso(listar)
+        return Funcao.PadronizarRetorno("sucesso",200,listar)
     } else {
-        return Funcao.padraoErro("Não foi encontrado registros para este usuário.")
+        return Funcao.PadronizarRetorno("erro", 400, "Não foi encontrado registros para este usuário.")
     }
 }
 
@@ -116,7 +116,7 @@ async function listarUm(user, emailUser, pixBusca) {
     let buscaBanco
     user = await Funcao.verificajwt(user)
     if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+        return Funcao.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
     buscaPix = await PixModel.find({ user, emailUser })
     pix.tamanho = buscaPix.length
@@ -129,12 +129,12 @@ async function listarUm(user, emailUser, pixBusca) {
                 buscaBanco = await BancoControl.listarUm(buscaPix[i].banco)
                 pix.dados = await organizaDados(buscaUser.nome, buscaUser.email, pix.encript, buscaPix[i].tipo, buscaBanco.nome, buscaBanco.code, buscaBanco.fullNome)
             } else {
-                pix.dados = Funcao.padraoErro("pix não encontrado.")
+                pix.dados = Funcao.PadronizarRetorno("erro", 400, "pix não encontrado.")
             }
         }
-        return Funcao.padraoSucesso(pix.dados)
+        return Funcao.PadronizarRetorno("sucesso",200,pix.dados)
     } else {
-        return Funcao.padraoErro("Email inválido.")
+        return Funcao.PadronizarRetorno("erro", 400, "Email inválido.")
     }
 }
 
@@ -144,7 +144,7 @@ async function excluirId(user, email, pix) {
     let tamanho
     user = await Funcao.verificajwt(user)
     if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+        return Funcao.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
     buscaPix = await PixModel.find({ user, email })
     tamanho = buscaPix.length
@@ -156,20 +156,20 @@ async function excluirId(user, email, pix) {
     }
     buscaPix = await PixModel.find({ user, email })
     tamanho = buscaPix.length
-    return Funcao.padraoSucesso(tamanho)
+    return Funcao.PadronizarRetorno("sucesso",200,tamanho)
 }
 
 async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     let valida = validaPix(pixNovo, tipo)
     if (valida.validador == false) {
-        return Funcao.padraoErro(valida.mensagem)
+        return Funcao.PadronizarRetorno("erro", 400, valida.mensagem)
     }
     let pix = new Object()
     let buscaPix
     let userEncript = user
     user = await Funcao.verificajwt(user)
     if (user == false) {
-        return Funcao.padraoErro("Usuario não identificado!!!")
+        return Funcao.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
     buscaPix = await PixModel.find({ user, email })
     pix.tamanho = buscaPix.length
@@ -181,31 +181,31 @@ async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
             if (buscaPix[i].pix == pixAntigo) {
                 await PixModel.findOneAndUpdate({ user, email, pix: pix.encript }, { pix: pix.novo, tipo, banco })
                 pix.dados = await listarUm(userEncript, email, pixNovo)
-                return Funcao.padraoSucesso(pix.dados)
+                return Funcao.PadronizarRetorno("sucesso",200,pix.dados)
             } else {
-                pix.dados = Funcao.padraoErro("pix não encontrado.")
+                pix.dados = Funcao.PadronizarRetorno("erro", 400, "pix não encontrado.")
             }
         }
-        return Funcao.padraoSucesso(pix.dados)
+        return Funcao.PadronizarRetorno("sucesso",200,pix.dados)
     } else {
-        return Funcao.padraoErro("Não existe pix para este usuario.")
+        return Funcao.PadronizarRetorno("erro", 400, "Não existe pix para este usuario.")
     }
 }
 
 function testePix(pix, tipo) {
     pix = validaPix(pix, tipo)
     if (pix.validador == true) {
-        return Funcao.padraoSucesso("pix Válido")
+        return Funcao.PadronizarRetorno("sucesso",200,"pix Válido")
     }
-    return Funcao.padraoErro("Pix Inválido")
+    return Funcao.PadronizarRetorno("erro", 400, "Pix Inválido")
 }
 
 async function listarTipoPix() {
     let result = await ConfigControl.listarTipoPix()
     if (result.length> 1)
-        return Funcao.padraoSucesso(result)
+        return Funcao.PadronizarRetorno("sucesso",200,result)
     else
-        return Funcao.padraoErro("Não foi possivel retornar os dados.")
+        return Funcao.PadronizarRetorno("erro", 400, "Não foi possivel retornar os dados.")
 }
 
 module.exports = { inserir, listar, listarUm, excluirId, editar, testePix, listarTipoPix }

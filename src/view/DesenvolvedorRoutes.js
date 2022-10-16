@@ -1,87 +1,105 @@
 import express from 'express'
-import Funcao from '../controller/functions'
+import Framework from '../controller/functions'
 import BancoApi from '../client.web/bancoapi'
 import ConfigControl from '../controller/config'
 import SenhaAntiga from '../controller/SenhaAntigaController'
 
-
 const router = express.Router()
 
-
-// rota de teste servidor
+//#region TESTE DE ESTABILIDADE
 router.get('/testeServer', (req, res) => {
-  const descricao = 'Acessado backend!!!'
-  res.json({ descricao })
+  try {
+    let conexao = Framework.PadronizarRetorno("sucesso", 200, "Conexão estabelecida com sucesso.")
+    res.status(conexao.status).json(conexao)
+  } catch (e) {
+    let conexao = Framework.PadronizarRetorno("erro", 400, "Não foi possivel retornar requisição")
+    res.status(conexao.status).json(conexao)
+  }
 })
+//#endregion
+
+//#region PAGINAS DE INTERACTIVIDADE
 router.get('/rotasparaimportacao', async (req, res,) => {
   res.redirect('https://drive.google.com/drive/folders/1-1Wf1jpu1xFKtdh2wmUPzpW1nrCAQgtA?usp=sharing')
 })
+
 router.get('/ferramentasDoDesenvolvedor', async (req, res,) => {
   res.redirect('https://drive.google.com/drive/folders/15elduxagVHk_4bNguYmTWVMfVeGu3iLp?usp=sharing')
 })
+//#endregion
 
-
-router.get('/testeToken', async (req, res,) => {
-  const Bearer = req.body.token
-  const conteudo = await Funcao.verificajwt(Bearer)
-  res.json({ conteudo })
-})
-
-
-router.get('/AtualizaToken', async (req, res) => {
-  const atualizatoken = req.headers.authorization.replace(/^Bearer\s/, '');
-  const token = await Funcao.atualizajwt(atualizatoken)
-  if (token == false) {
-    res.status(401).json({ token: [] })
+//#region TESTE DE ENCRIPTAÇÃO DE RETORNO
+router.post('/manipulaToken', async (req, res,) => {
+  try {
+    const dado = req.body.dado
+    const rotina = req.body.rotina
+    const retorno = await Framework.ManipularToken(rotina, dado)
+    res.status(retorno.status).json(retorno)
+  } catch (e) {
+    let conexao = Framework.PadronizarRetorno("erro", 400, "Não foi possivel retornar requisição.")
+    res.status(conexao.status).json(conexao)
   }
-  res.status(200).json({ token })
 })
+//#endregion
 
-router.get('/geraToken', async (req, res) => {
-  const conteudo = req.body.informacao;
-  const token = await Funcao.gerajwt(conteudo)
-  if (token == false) {
-    res.status(401).json({ token: [] })
-  } else
-    res.status(200).json({ token })
-})
-
-router.get('/AtualizaBanco', async (req, res) => {
+//#region MENU CONFIGURAÇÕES
+router.get('/AtualizaBanco', Framework.adminOnly, async (req, res) => {
   const bancos = await BancoApi.buscarBancos()
   res.json(bancos)
 })
 
-router.post('/config/secreto', async (req, res) => {
+router.post('/config/secreto', Framework.adminOnly, async (req, res) => {
   let palavra = req.body.palavra
   await ConfigControl.inserirPalavra(palavra)
   palavra = await ConfigControl.palavra()
   res.status(200).json({ palavra })
 })
-router.post('/config/totalbanco', async (req, res) => {
-  let total = req.body.total
-  await ConfigControl.inserirTotalBanco(total)
-  total = await ConfigControl.totalBanco()
-  res.status(200).json(total)
-})
-router.post('/config/inserirtipopix', async (req, res) => {
+
+router.post('/config/inserirtipopix', Framework.adminOnly, async (req, res) => {
   let tipo = req.body.tipo
   await ConfigControl.inserirTipoPix(tipo)
   tipo = await ConfigControl.listarTipoPix()
   res.status(200).json(tipo)
 })
+
 router.get('/config/listartipopix', async (req, res) => {
   let tipo = await ConfigControl.listarTipoPix()
   res.status(200).json(tipo)
 })
+//#endregion
 
-router.post('/historicoDeSenha', async (req, res) => {
-  let email=req.body.email
+//#region TESTE DE BIBLIOTECA
+router.post('/historicoDeSenha', Framework.adminOnly, async (req, res) => {
+  let email = req.body.email
   let senha = req.body.senha
   let resposta
-    resposta = await SenhaAntiga.SenhaAntiga(email,senha)
+  resposta = await SenhaAntiga.SenhaAntiga(email, senha)
   res.status(resposta.status).json(resposta)
 })
 
+router.post('/validaDado', async (req, res) => {
+  try {
+    const dado = req.body.dado
+    const tipoDado = req.body.tipo
+    const retorno = await Framework.ValidarDado(tipoDado, dado)
+    res.status(retorno.status).json(retorno)
+  } catch (e) {
+    let conexao = Framework.PadronizarRetorno("erro", 400, `Não foi possivel retornar requisição: ${e.message}`)
+    res.status(conexao.status).json(conexao)
+  }
+})
 
+router.post('/manipulaDado', async (req, res) => {
+  try {
+    const dado = req.body.dado
+    const rotina = req.body.rotina
+    const retorno = await Framework.ManipularDado(rotina, dado)
+    res.status(retorno.status).json(retorno)
+  } catch (e) {
+    let conexao = Framework.PadronizarRetorno("erro", 400, `Não foi possivel retornar requisição: ${e.message}`)
+    res.status(conexao.status).json(conexao)
+  }
+})
+//#endregion
 
 module.exports = router
