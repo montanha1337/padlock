@@ -9,7 +9,6 @@ import Contato from './view/ContatoView'
 import Logs from './view/LogsView'
 
 const routes = new Router();//olhar o final da rota 
-
 //#region Documentação
 
 routes.use('/documentacao', swaggerUiExpress.serve, swaggerUiExpress.setup(swaggerDocs))

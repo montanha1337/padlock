@@ -1,57 +1,64 @@
-import Funcao from './functions'
+import FrameWork from './functions'
 import AntigaModel from '../model/senhaAntiga'
 
 async function inserir(email, senha) {
-    senha = await Funcao.encripta(senha)
     await AntigaModel.insertMany({ email, senha: { senha: senha } })
-    return Funcao.padraoSucesso("Senha nunca utilizada.")
+    return FrameWork.PadronizarRetorno("sucesso", 200, "Senha nunca utilizada.")
 }
 
 async function validaAntiga(email, senha) {
-    let result = await AntigaModel.find({ email })
-    let iguais = 0
-    if (result[0] != null) {
-        for (let i = 0; i < result[0].senha.length; i++) {
-            let contsenha = await Funcao.verificajwt(result[0].senha[i].senha)
-            if (contsenha == false) {
-                return Funcao.padraoErro("Senha encriptada Inválida.")
+    try {
+        let result = await AntigaModel.find({ email })
+        let iguais = 0
+
+        senha = await FrameWork.ManipularDado("desencripta", senha)
+
+        if (result.length > 0) {
+            for (let i = 0; i < result[0].senha.length; i++) {
+                let senhabd = result[0].senha[i].senha
+                let contsenha = await FrameWork.ManipularDado("desencripta", senhabd)
+
+                if (contsenha.status != 200)
+                    return contsenha
+                if (contsenha.result == senha.result)
+                    iguais++
             }
-            if (contsenha == senha) {
-                iguais++
-            }
-        }
-        if (iguais == 0) {
-            senha = await Funcao.encripta(senha)
-            let add = await AntigaModel.updateOne({ email }, { $push: { senha: { senha } } })
-            if (add.matchedCount !== 1) {
-                return Funcao.padraoErro("Não possivel adicionar a senha.")
-            }
-            return Funcao.padraoSucesso("Senha nunca utilizada")
+            if (iguais == 0) {
+                senha = await FrameWork.ManipularDado("encripta", senha.result)
+                let add = await AntigaModel.updateOne({ email }, { $push: { senha: { senha } } })
+
+                if (add.matchedCount !== 1)
+                    return FrameWork.PadronizarRetorno("erro", 400, "Não possivel adicionar a senha.")
+
+                return FrameWork.PadronizarRetorno("sucesso", 200, "Senha nunca utilizada")
+            } else
+                return FrameWork.PadronizarRetorno("erro", 400, "Senha já utilizada.")
         } else {
-            return Funcao.padraoErro("Senha já utilizada.")
+            senha = await FrameWork.ValidarDado("senha", senha)
+            return await inserir(email, senha.result.senhacripta)
         }
-    } else {
-        return await inserir(email, senha)
+
+    } catch (e) {
+        return PadronizarRetorno("erro", 400, `Erro ao validar senha antiga: ${e.message}`)
     }
 }
 
 async function SenhaAntiga(email, senha) {
-    let senhaDescript = await Funcao.verificajwt(senha)
-    if (senhaDescript == false) {
-        senha = await Funcao.validaSenha(senha)
-    }
-    else {
-        senha = await Funcao.validaSenha(senhaDescript)
-    }
-    if (senha.status == 400) {
-        return senha
-    }
-    senha = senha.result.senha
-    let result = await AntigaModel.find({ email })
-    if (result[0] != null) {
-        return await validaAntiga(email, senha)
-    } else {
-        return await inserir(email, senha)
+    try {
+        senha = await FrameWork.ValidarDado("senha", senha)
+
+        if (senha.status == 400)
+            return senha
+
+        senha = senha.result.senhacripta
+        let result = await AntigaModel.find({ email })
+        if (result[0] != null) {
+            return await validaAntiga(email, senha)
+        } else {
+            return await inserir(email, senha)
+        }
+    } catch (e) {
+        return FrameWork.PadronizarRetorno("erro", 400, `Erro ao validar senha antiga: ${e.message}`)
     }
 }
 

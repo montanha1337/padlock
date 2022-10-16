@@ -21,6 +21,7 @@ async function inserir() {
             bancos = await BancoModel.create({ nome, code, fullNome })
         }
     }
+    await ConfigControl.inserirTotalBanco(banco.tamanho)
     banco = await listar()
     return banco
 }
@@ -29,15 +30,13 @@ async function listar() {
     let banco = new Object()
     banco.dados = await BancoModel.find()
     banco.tamanho = banco.dados.length
-    banco.bd= await ConfigControl.totalBanco()
-    if(banco.tamanho==banco.bd){
-        return Funcao.padraoSucesso(banco.dados)
-    }else{
+    banco.bd = await ConfigControl.totalBanco()
+    if (banco.tamanho != banco.bd) {
         await excluir()
         await inserir()
-        banco.lista = await listar()
-        return Funcao.padraoSucesso(banco.lista)
     }
+    banco.dados = await listar()
+    return Funcao.PadronizarRetorno("sucesso", 200, banco.dados)
 }
 
 async function excluir() {
@@ -49,11 +48,11 @@ async function excluir() {
 async function listarUm(code) {
     let banco = await BancoModel.findOne({ code })
     if (banco) {
-        return Funcao.padraoSucesso(banco)
+        return Funcao.PadronizarRetorno("sucesso", 200, banco)
     } else {
         await inserir()
         banco = await BancoModel.findOne({ code })
-        return Funcao.padraoSucesso(banco)
+        return Funcao.PadronizarRetorno("sucesso", 200, banco)
     }
 }
 
