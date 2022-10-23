@@ -1,5 +1,6 @@
 import express from 'express'
 import PixControl from '../controller/pixController'
+import Framework from '../controller/functions'
 
 const router = express.Router()
 
