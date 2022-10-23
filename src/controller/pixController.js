@@ -92,7 +92,7 @@ async function listar(user, emailUser) {
     pix.lista = buscaPix
     if (buscaPix[0]) {
         buscaUser = await Framework.ManipularToken("criar", user)
-        if (token.status != 200)
+        if (buscaUser.status != 200)
             return Framework.PadronizarRetorno("erro", 400, "Não foi possivel gerar autenticação.")
 
         for (let i = 0; i < pix.tamanho; i++) {
