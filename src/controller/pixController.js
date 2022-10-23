@@ -101,10 +101,10 @@ async function listar(user, emailUser) {
                 return buscaBanco
             }
             pixdescript = await Framework.ManipularDado("desencripta", pix.dados[i].pix)
-            pix.lista[i] = await organizaDados(pixdescript, pix.dados[i].tipo, buscaBanco.result.fullNome)
+            pix.lista[i] = await organizaDados(pixdescript.result, pix.dados[i].tipo, buscaBanco.result.fullNome)
             buscaBanco = ""
         }
-        listar.token = buscaUser
+        listar.token = buscaUser.result
         listar.pix = pix.lista
 
         return Framework.PadronizarRetorno("sucesso", 200, listar)
