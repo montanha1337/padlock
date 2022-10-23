@@ -314,6 +314,11 @@ async function validaSenha(senha) {
 //#endregion
 
 //#region UTILITÁRIOS
+async function secretoFuncao() {
+    const secreto = await ConfigControl.palavra()
+    return secreto
+}
+
 function senhaMaiuscula(senha) {
     senha = senha.split("0").join("*")
     senha = senha.split("1").join("*")
@@ -326,11 +331,6 @@ function senhaMaiuscula(senha) {
     senha = senha.split("8").join("*")
     senha = senha.split("9").join("*")
     return senha.toUpperCase()
-}
-
-async function secretoFuncao() {
-    const secreto = await ConfigControl.palavra()
-    return secreto
 }
 
 const adminOnly = async (req, res, next) => {

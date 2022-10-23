@@ -107,7 +107,7 @@ async function listar(user, emailUser) {
 
         return Framework.PadronizarRetorno("sucesso", 200, listar)
     } else {
-        return Framework.PadronizarRetorno("erro", 400, "Não foi encontrado registros para este usuário.")
+        return Framework.PadronizarRetorno("sucesso", 200, "Não foi encontrado registros para este usuário.")
     }
 }
 
