@@ -1,7 +1,7 @@
 import BancoModel from '../model/Banco';
 import BancoApi from '../client.web/bancoapi'
 import ConfigControl from './config'
-import Funcao from './functions'
+import Framework from './functions'
 
 async function inserir() {
     let nome
@@ -27,16 +27,19 @@ async function inserir() {
 }
 
 async function listar() {
-    let banco = new Object()
-    banco.dados = await BancoModel.find()
-    banco.tamanho = banco.dados.length
-    banco.bd = await ConfigControl.totalBanco()
-    if (banco.tamanho != banco.bd) {
-        await excluir()
-        await inserir()
+    try {
+        let banco = new Object()
+        banco.dados = await BancoModel.find()
+        banco.tamanho = banco.dados.length
+        banco.bd = await ConfigControl.totalBanco()
+        if (banco.tamanho != banco.bd) {
+            await excluir()
+            await inserir()
+        }        
+        return Framework.PadronizarRetorno("sucesso", 200, banco.dados)
+    } catch (e) {
+        return Framework.PadronizarRetorno("erro", 400, `não foi possivel listar bancos: ${e.message}`)
     }
-    banco.dados = await listar()
-    return Funcao.PadronizarRetorno("sucesso", 200, banco.dados)
 }
 
 async function excluir() {
@@ -48,11 +51,11 @@ async function excluir() {
 async function listarUm(code) {
     let banco = await BancoModel.findOne({ code })
     if (banco) {
-        return Funcao.PadronizarRetorno("sucesso", 200, banco)
+        return Framework.PadronizarRetorno("sucesso", 200, banco)
     } else {
         await inserir()
         banco = await BancoModel.findOne({ code })
-        return Funcao.PadronizarRetorno("sucesso", 200, banco)
+        return Framework.PadronizarRetorno("sucesso", 200, banco)
     }
 }
 
