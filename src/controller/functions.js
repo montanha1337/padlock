@@ -145,7 +145,7 @@ async function descrypt(Dado) {
 }
 //#endregion
 
-//#region CRIPTOGRAFIA DE RETORNO
+//#region CODIGIFICAÇÃO DE RETORNO
 async function gerajwt(iduser) {
     if (iduser == "" || iduser == null)
         return false

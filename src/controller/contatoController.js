@@ -76,18 +76,18 @@ async function listar(IdUser,contato) {
 async function listarContato(IdUser) {
     let listar = new Object()
     listar = []
-    IdUser = await Framework.verificajwt(IdUser)
-    if (IdUser == false) {
+    IdUser = await Framework.ManipularToken("dev-retornaId",IdUser)
+    if (IdUser.status != 200) {
         return Framework.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
-    let lista = await ContatoModel.find({ IdUser })
+    let lista = await ContatoModel.find({ IdUser: IdUser.result })
     if(lista == ""){
         return Framework.PadronizarRetorno("erro", 400, "Não foi encontrados contatos para este usuario.")
     }
     for (let i = 0; i < lista.length; i++) {        
         listar[i] = {Nome: lista[i].nome}
     }
-    IdUser = await Framework.gerajwt(IdUser)
+    IdUser = await Framework.ManipularToken("gera",IdUser)
     return Framework.PadronizarRetorno("sucesso",200,{token:IdUser, Contato: listar})
 }
 
