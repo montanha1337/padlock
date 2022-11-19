@@ -82,7 +82,7 @@ async function listarContato(IdUser) {
     }
     let lista = await ContatoModel.find({ IdUser: IdUser.result })
     if(lista == ""){
-        return Framework.PadronizarRetorno("erro", 400, "Não foi encontrados contatos para este usuario.")
+        return Framework.PadronizarRetorno("sucesso", 200, "Não foi encontrados contatos para este usuario.")
     }
     for (let i = 0; i < lista.length; i++) {        
         listar[i] = {Nome: lista[i].nome}
