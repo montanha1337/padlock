@@ -63,11 +63,11 @@ async function listar(IdUser,contato) {
         return Framework.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
     }
     let lista = await ContatoModel.find({ IdUser: IdUser.result, nome: contato })
-    if(lista == ""){
+    if(lista == "")
         return Framework.PadronizarRetorno("erro", 400, "Não foi encontrados contatos para este usuario.")
-    }
-    for (let i = 0; i < lista[0].pix.length; i++) {
-        listar[i] = await formataDados( lista[0].pix[i].pix, lista[0].pix[i].tipo)
+
+    for (let i = 0; i < lista.length; i++) {
+        listar[i] = await formataDados( lista[i].pix[0].pix, lista[i].pix[0].tipo)
     }
     IdUser = await Framework.ManipularToken("gera",IdUser)
     return Framework.PadronizarRetorno("sucesso",200,{token:IdUser.result, Contato: lista[0].nome, pix: listar })
