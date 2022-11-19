@@ -16,18 +16,19 @@ async function formataDados(pix, tipo) {
 async function inserir(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
-    let valida = PixControl.testePix(pixNovo, tipo)
-    if (valida.status == 400) {
-        return valida
-    }
+    let valida = await PixControl.Validador(IdUser, {pix: pixNovo, tipo}, "validarPix")
+    if (valida.Validador == false)
+        return Framework.PadronizarRetorno("erro","400",valida.mensagem)
+
     pixNovo = await Framework.ManipularDado("encripta",pixNovo)
     IdUser = await Framework.ManipularToken("dev-retornaId",IdUser)
-    if (IdUser == false) {
-        return Framework.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
-    }
-    pix.pix = pixNovo
+
+    if (IdUser.status != 200)
+        return IdUser
+
+    pix.pix = pixNovo.result
     pix.tipo = tipo
-    inserir.adicionar = await ContatoModel.insertMany({ IdUser, nome, pix })
+    inserir.adicionar = await ContatoModel.insertMany({ IdUser: IdUser.result, nome, pix })
     return Framework.PadronizarRetorno("sucesso",200,inserir)
 }
 

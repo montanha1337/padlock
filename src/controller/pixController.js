@@ -40,6 +40,9 @@ async function Validador(token, container, rota) {
         case "listarTipoPix":
             return listarTipoPix()
 
+        case "validarPix":
+            return validaPix(container.pix,container.tipo)
+
         default:
             return Framework.PadronizarRetorno("erro", 400, "[Api] Erro ao informar a rota.")
     }
@@ -210,7 +213,6 @@ function validaPix(pix, tipo) {
     let valida = new Object()
     let aleatorio
     valida.pix = pix
-    valida.mensagem = "Pix Inválido."
     switch (tipo) {
         case "cpf":
             valida.validador = Framework.ValidarDado(tipo, pix)
@@ -249,4 +251,4 @@ async function organizaDados(pix, tipo, nomeBanco) {
 }
 //#endregion
 
-module.exports = { inserir, listar, listarUm, excluirId, editar, listarTipoPix }
+module.exports = { inserir, listar, listarUm, excluirId, editar, listarTipoPix, Validador }
