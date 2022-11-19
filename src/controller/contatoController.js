@@ -3,12 +3,12 @@ import ContatoModel from '../model/contato'
 import PixControl from './pixController'
 
 async function formataDados(pix, tipo) {
-    pix = await Framework.verificajwt(pix)
-    if (pix == false) {
-        return Framework.PadronizarRetorno("erro", 400, "Chave pix incorreta")
+    pix = await Framework.ManipularDado("desencripta",pix)
+    if (pix.status != 200) {
+        return pix
     }
     let format = new Object()
-    format.pix = pix
+    format.pix = pix.result
     format.tipo = tipo
     return format
 }
@@ -57,7 +57,6 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
 
 async function listar(IdUser,contato) {
     let listar = new Object()
-    let id
     listar = []
     IdUser = await Framework.ManipularToken("dev-retornaId",IdUser)
     if (IdUser.status != 200) {
