@@ -16,7 +16,7 @@ async function formataDados(pix, tipo) {
 async function inserir(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
-    let valida = await PixControl.Validador(IdUser, { pix: pixNovo, tipo }, "validarPix")
+    let valida = PixControl.validaPix(pixNovo, tipo)
     if (valida.Validador == false)
         return Framework.PadronizarRetorno("erro", "400", valida.mensagem)
 
@@ -39,7 +39,7 @@ async function inserir(IdUser, nome, pixNovo, tipo) {
 async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
-    let valida = PixControl.testePix(pixNovo, tipo)
+    let valida = PixControl.validaPix(pixNovo, tipo)
     inserir.result = true
     if (valida.status == 400) {
         return Framework.PadronizarRetorno("erro", 400, valida.mensagem)
@@ -141,16 +141,31 @@ async function excluirPix(user, nome, pix) {
     user = await Framework.ManipularToken("dev-retornaId", user)
     if (user.status != 200)
         return user
-    pix = Framework.ManipularDado("encripta", pix)
-        if (user.status != 200)
-            return user
+    pix = await Framework.ManipularDado("encripta", pix)
+    if (user.status != 200)
+        return user
 
+    pix = pix.result
     var contatoExistente = await ContatoModel.find({ IdUser: user.result, nome })
-    if (contatoExistente[0].pix.length == 1)
+    if (contatoExistente[0].pix.length == 1) {
         await ContatoModel.deleteMany({ IdUser: user.result, nome: Contato })
+    }
+    else {
+        contatoExistente = await ContatoModel.find({ IdUser: user.result, nome, pix: { $elemMatch: { pix: pix } } })
+        await ContatoModel.findByIdAndDelete(contatoExistente[0].id)
+
+        for (let i = 0; i < contatoExistente[0].pix.length; i++) {
+            if (contatoExistente[0].pix[i].pix == pix)
+                contatoExistente[0].pix.splice(i, 1);
+        }
+        await ContatoModel.insertMany(contatoExistente[0])
+    }
+
+    contatoExistente = await ContatoModel.find({ IdUser: user.result, nome, pix: { $elemMatch: { pix: pix } } })
+    if (contatoExistente.length == 0)
+        return Framework.PadronizarRetorno("sucesso", 200, "Excluído com sucesso")
     else
-        await ContatoModel.findOneAndDelete({ IdUser: user.result, nome, pix: { pix: pix.result } })
-    return Framework.PadronizarRetorno("sucesso", 200, "Excluído com sucesso")
+        return Framework.PadronizarRetorno("erro", 400, "Falha ao excluir")
 }
 
 module.exports = { inserir, adicionarPix, EditarContato, listar, listarContato, listarUm, excluirContato, excluirPix }

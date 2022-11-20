@@ -12,7 +12,7 @@ async function Validador(token, container, rota) {
     //#region TRATAMENTO DE DADOS
     let idUser = await Framework.ManipularToken("dev-retornaId", token)
     if (idUser.status != 200)
-        return Framework.Framework.PadronizarRetorno("erro", idUser.status, idUser.message)
+        return Framework.PadronizarRetorno("erro", idUser.status, idUser.message)
 
     token = await Framework.ManipularToken("atualizar", token)
     if (token.status != 200)
@@ -253,4 +253,4 @@ async function organizaDados(pix, tipo, nomeBanco) {
 }
 //#endregion
 
-module.exports = { inserir, listar, listarUm, excluirId, editar, listarTipoPix, Validador }
+module.exports = { inserir, listar, listarUm, excluirId, editar, listarTipoPix, Validador, validaPix }
