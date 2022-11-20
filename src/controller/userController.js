@@ -60,20 +60,20 @@ async function login(email, senha) {
 
 async function AlterarSenha(email, senha, senhaAntiga) {
     let acesso
-    let senhaEncripta = await Framework.geraSenha(senha)
+    let senhaEncripta = await Framework.ManipularDado("encripta",senha)
     if (senhaAntiga == '' || senhaAntiga == null || senhaAntiga == undefined) {
         acesso = await login(email, senha)
         if (acesso.message == "Senha Expirada") {
             let result = await UserModel.findOne({ email })
             if (result) {
-                await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senhaEncripta })
+                await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senhaEncripta.result })
                 acesso = await login(email, senha)
                 return acesso
             }
         } else if (acesso.message == "Senha Incorreta") {
             let result = await UserModel.findOne({ email })
             if (result) {
-                await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senhaEncripta })
+                await UserModel.findByIdAndUpdate({ _id: result._id }, { senha: senhaEncripta.result })
                 acesso = await login(email, senha)
                 return acesso
             }
