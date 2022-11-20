@@ -148,7 +148,7 @@ async function excluirPix(user, nome, pix) {
     pix = pix.result
     var contatoExistente = await ContatoModel.find({ IdUser: user.result, nome })
     if (contatoExistente[0].pix.length == 1) {
-        await ContatoModel.deleteMany({ IdUser: user.result, nome: Contato })
+        await ContatoModel.deleteMany({ IdUser: user.result, nome })
     }
     else {
         contatoExistente = await ContatoModel.find({ IdUser: user.result, nome, pix: { $elemMatch: { pix: pix } } })
