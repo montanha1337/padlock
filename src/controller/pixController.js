@@ -149,21 +149,23 @@ async function excluirId(user, email, pix) {
     let pixBanco
     let buscaPix
     let tamanho
-    user = await Framework.verificajwt(user)
-    if (user == false) {
-        return Framework.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
+    user = await Framework.ManipularToken("dev-retornaId", user)
+    if (user.status != 200) {
+        return user
     }
-    buscaPix = await PixModel.find({ user, email })
+    buscaPix = await PixModel.find({ user: user.result, emailUser: email })
     tamanho = buscaPix.length
     for (let i = 0; i < tamanho; i++) {
-        pixBanco = await Framework.verificajwt(buscaPix[i].pix)
-        if (pix == pixBanco) {
+        pixBanco = await Framework.ManipularDado("desencripta", buscaPix[i].pix)
+        if (pix == pixBanco.result) {
             await PixModel.findByIdAndDelete(buscaPix[i]._id)
         }
     }
-    buscaPix = await PixModel.find({ user, email })
-    tamanho = buscaPix.length
-    return Framework.PadronizarRetorno("sucesso", 200, tamanho)
+    buscaPix = await PixModel.find({ user: user.result, email })
+    if(buscaPix.length == 0)
+    return Framework.PadronizarRetorno("sucesso", 200, "Excluido com sucesso")
+    else
+    return Framework.PadronizarRetorno("erro", 400, "Erro ao excluir")
 }
 
 async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
