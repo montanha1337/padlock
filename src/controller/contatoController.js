@@ -68,12 +68,12 @@ async function listar(IdUser, contato) {
     }
     let lista = await ContatoModel.find({ IdUser: IdUser.result, nome: contato })
     if (lista == "")
-        return Framework.PadronizarRetorno("erro", 400, "Não foi encontrados contatos para este usuario.")
+        return Framework.PadronizarRetorno("erro", 400, "Não foi encontrado o contato deste usuario.")
 
     for (let i = 0; i < lista[0].pix.length; i++) {
         listar[i] = await formataDados(lista[0].pix[i].pix, lista[0].pix[i].tipo)
     }
-    IdUser = await Framework.ManipularToken("gera", IdUser)
+    IdUser = await Framework.ManipularToken("criar", IdUser.result)
     return Framework.PadronizarRetorno("sucesso", 200, { token: IdUser.result, Contato: lista[0].nome, pix: listar })
 }
 
@@ -91,8 +91,8 @@ async function listarContato(IdUser) {
     for (let i = 0; i < lista.length; i++) {
         listar[i] = { Nome: lista[i].nome }
     }
-    IdUser = await Framework.ManipularToken("gera", IdUser)
-    return Framework.PadronizarRetorno("sucesso", 200, { token: IdUser, Contato: listar })
+    IdUser = await Framework.ManipularToken("criar", IdUser.result)
+    return Framework.PadronizarRetorno("sucesso", 200, { token: IdUser.result, Contato: listar })
 }
 
 async function EditarContato(user, contato, nome) {
@@ -123,7 +123,7 @@ async function listarUm(user, contato) {
 }
 
 async function excluirContato(idUser, Contato) {
-    idUser = await Framework.verificajwt(idUser)
+    idUser = Framework.ManipularToken("dev-retornaId", idUser)
 
     if (idUser == false)
         return Framework.PadronizarRetorno("erro", 400, "Usuario não Encontrado")
@@ -137,13 +137,20 @@ async function excluirContato(idUser, Contato) {
         return Framework.PadronizarRetorno("erro", 400, { message: "Erro ao deletar" })
 }
 
-async function excluirPix(user, pix) {
-    user = await Framework.verificajwt(user)
-    if (user == false) {
-        return Framework.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
-    }
-    let result = await ContatoModel.findOneAndDelete({ IdUser: user, pix: { pix } })
-    return Framework.PadronizarRetorno("sucesso", 200, result)
+async function excluirPix(user, nome, pix) {
+    user = await Framework.ManipularToken("dev-retornaId", user)
+    if (user.status != 200)
+        return user
+    pix = Framework.ManipularDado("encripta", pix)
+        if (user.status != 200)
+            return user
+
+    var contatoExistente = await ContatoModel.find({ IdUser: user.result, nome })
+    if (contatoExistente[0].pix.length == 1)
+        await ContatoModel.deleteMany({ IdUser: user.result, nome: Contato })
+    else
+        await ContatoModel.findOneAndDelete({ IdUser: user.result, nome, pix: { pix: pix.result } })
+    return Framework.PadronizarRetorno("sucesso", 200, "Excluído com sucesso")
 }
 
 module.exports = { inserir, adicionarPix, EditarContato, listar, listarContato, listarUm, excluirContato, excluirPix }

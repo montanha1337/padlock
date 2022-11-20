@@ -73,8 +73,9 @@ router.delete('/deletar', async (req, res) => {
 router.delete('/deletarPix', async (req, res) => {
   try {
   let token = req.headers.authorization.replace(/^Bearer\s/, '');
+  let nome =req.body.nome
   let pix =req.body.pix
-  let deletar = await ContatoControl.excluirPix(token,pix)
+  let deletar = await ContatoControl.excluirPix(token,nome,pix)
   res.status(deletar.status).json(deletar)
 } catch (e) {
   let conexao = Framework.PadronizarRetorno("erro", 400, `Não foi possivel retornar requisição: ${e.message}`)
