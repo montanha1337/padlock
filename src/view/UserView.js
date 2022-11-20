@@ -40,7 +40,7 @@ router.put('/alteraSenha', async (req, res) => {
     const token = req.headers.authorization
     let altera
     if (!token) {
-      altera = await UserControl.Validador("", "", email, senha, senhaAntiga, "AlterarSenha")
+      altera = await UserControl.Validador("", "", email, senha, "", "AlterarSenha")
     } else {
       token.replace(/^Bearer\s/, '')
       altera = await UserControl.Validador(token, "", email, senha, senhaAntiga, "AlterarSenha")
