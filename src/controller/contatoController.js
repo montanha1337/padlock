@@ -16,7 +16,7 @@ async function formataDados(pix, tipo) {
 async function inserir(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
-    let valida = PixControl.validaPix(pixNovo, tipo)
+    let valida = await PixControl.validaPix(pixNovo, tipo)
     if (valida.validador.status != 200)
         return valida.validador
 
@@ -39,7 +39,7 @@ async function inserir(IdUser, nome, pixNovo, tipo) {
 async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
-    let valida = PixControl.validaPix(pixNovo, tipo)
+    let valida = await PixControl.validaPix(pixNovo, tipo)
     inserir.result = true
 
     if (valida.validador.status != 200)
