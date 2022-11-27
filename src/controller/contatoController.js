@@ -17,8 +17,8 @@ async function inserir(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
     let valida = PixControl.validaPix(pixNovo, tipo)
-    if (valida.Validador == false)
-        return Framework.PadronizarRetorno("erro", "400", valida.mensagem)
+    if (valida.Validador.status != 200)
+        return valida.Validador
 
     pixNovo = await Framework.ManipularDado("encripta", pixNovo)
     IdUser = await Framework.ManipularToken("dev-retornaId", IdUser)
@@ -41,9 +41,10 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     let pix = new Object()
     let valida = PixControl.validaPix(pixNovo, tipo)
     inserir.result = true
-    if (valida.status == 400) {
-        return Framework.PadronizarRetorno("erro", 400, valida.mensagem)
-    }
+    
+    if (valida.Validador.status != 200)
+        return valida.Validador
+    
     pixNovo = await Framework.ManipularDado("encripta", pixNovo)
     IdUser = await Framework.ManipularToken("dev-retornaId", IdUser)
     if (IdUser.status != 200) {

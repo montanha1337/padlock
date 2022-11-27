@@ -41,7 +41,7 @@ async function Validador(token, container, rota) {
             return listarTipoPix()
 
         case "validarPix":
-            return validaPix(container.pix,container.tipo)
+            return validaPix(container.pix, container.tipo)
 
         default:
             return Framework.PadronizarRetorno("erro", 400, "[Api] Erro ao informar a rota.")
@@ -57,26 +57,26 @@ async function inserir(user, emailUser, pix, banco, tipo) {
     let buscaUser
     let buscaBanco
     let valida = validaPix(pix, tipo)
-    if (valida.validador == false) 
-        return Framework.PadronizarRetorno("erro", 400, valida.mensagem)
+    if (valida.Validador.status != 200)
+        return valida.Validador
 
-    pix = await Framework.ManipularDado("encripta",pix)
+    pix = await Framework.ManipularDado("encripta", pix)
     user = await Framework.ManipularToken("dev-retornaId", user)
 
-    if (user.status != 200) 
+    if (user.status != 200)
         return Framework.PadronizarRetorno("erro", 400, "Usuario não identificado!!!")
 
     valida = await PixModel.find({ user: user.result, emailUser, banco })
 
-    if (valida.length > 5) 
+    if (valida.length > 5)
         return Framework.PadronizarRetorno("erro", 400, "Quantidade de pix cadastrados excede o limite para este banco.")
 
     result = await PixModel.create({ user: user.result, emailUser, tipo, pix: pix.result, banco })
-    buscaUser = await Framework.ManipularToken("criar",user.result)
+    buscaUser = await Framework.ManipularToken("criar", user.result)
     buscaBanco = await BancoControl.listarUm(banco)
-    pix = await Framework.ManipularDado("desencripta",pix.result)
+    pix = await Framework.ManipularDado("desencripta", pix.result)
     inserir = await organizaDados(pix.result, tipo, buscaBanco.result.fullNome)
-    inserir.token = buscaUser.result==null? buscaUser.message : buscaUser.result
+    inserir.token = buscaUser.result == null ? buscaUser.message : buscaUser.result
     return Framework.PadronizarRetorno("sucesso", 200, inserir)
 }
 
@@ -162,17 +162,17 @@ async function excluirId(user, email, pix) {
         }
     }
     buscaPix = await PixModel.find({ user: user.result, email })
-    if(buscaPix.length == 0)
-    return Framework.PadronizarRetorno("sucesso", 200, "Excluido com sucesso")
+    if (buscaPix.length == 0)
+        return Framework.PadronizarRetorno("sucesso", 200, "Excluido com sucesso")
     else
-    return Framework.PadronizarRetorno("erro", 400, "Erro ao excluir")
+        return Framework.PadronizarRetorno("erro", 400, "Erro ao excluir")
 }
 
 async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     let valida = validaPix(pixNovo, tipo)
-    if (valida.validador == false) {
-        return Framework.PadronizarRetorno("erro", 400, valida.mensagem)
-    }
+    if (valida.Validador.status != 200)
+        return valida.Validador
+    
     let pix = new Object()
     let buscaPix
     let userEncript = user
@@ -232,13 +232,13 @@ function validaPix(pix, tipo) {
             aleatorio = pix.split("")
             aleatorio = aleatorio.length
             if (aleatorio !== 32) {
-                valida.validador = false
+                valida.validador = Framework.PadronizarRetorno("erro", 400, "chave aleatoria não contém 32 caracteres.")
                 return valida
             }
-            valida.validador = true
+            valida.validador = Framework.PadronizarRetorno("sucesso", 200, "chave aleatoria válida.")
             return valida
         default:
-            valida.validador = false
+            valida.validador = Framework.PadronizarRetorno("erro", 400, "Tipo não permitido ou não implementado.")
             valida.mensagem = "Tipo Inválido"
             return valida
     }
