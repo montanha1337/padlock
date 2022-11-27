@@ -26,6 +26,10 @@ router.get('/rotasparaimportacao', async (req, res,) => {
 router.get('/ferramentasDoDesenvolvedor', async (req, res,) => {
   res.redirect('https://drive.google.com/drive/folders/15elduxagVHk_4bNguYmTWVMfVeGu3iLp?usp=sharing')
 })
+
+router.get('/tcc', async (req, res,) => {
+  res.redirect('https://drive.google.com/drive/folders/1HlS--KrjWP0-Vn9np8rjm5dwA-02U2eg?usp=sharing')
+})
 //#endregion
 
 //#region TESTE DE ENCRIPTAÇÃO DE RETORNO
