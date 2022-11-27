@@ -227,6 +227,10 @@ async function validaPix(pix, tipo) {
             return valida
         case "telefone":
             valida.validador = validator(pix)
+            if(valida.validador)
+                valida.validador = Framework.PadronizarRetorno("sucesso", 200, "Telefone válido.")
+            else
+                valida.validador = Framework.PadronizarRetorno("erro", 400, "Telefone Inválido")            
             return valida
         case "aleatoria":
             aleatorio = pix.split("")
