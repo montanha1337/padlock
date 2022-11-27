@@ -56,9 +56,9 @@ async function inserir(user, emailUser, pix, banco, tipo) {
     let inserir = new Object()
     let buscaUser
     let buscaBanco
-    let valida = validaPix(pix, tipo)
-    if (valida.Validador.status != 200)
-        return valida.Validador
+    let valida = await validaPix(pix, tipo)
+    if (valida.validador.status != 200)
+        return valida.validador
 
     pix = await Framework.ManipularDado("encripta", pix)
     user = await Framework.ManipularToken("dev-retornaId", user)
@@ -170,8 +170,8 @@ async function excluirId(user, email, pix) {
 
 async function editar(user, email, pixAntigo, pixNovo, tipo, banco) {
     let valida = validaPix(pixNovo, tipo)
-    if (valida.Validador.status != 200)
-        return valida.Validador
+    if (valida.validador.status != 200)
+        return valida.validador
     
     let pix = new Object()
     let buscaPix
@@ -211,19 +211,19 @@ async function listarTipoPix() {
 //#endregion
 
 //#region AUXILIARES
-function validaPix(pix, tipo) {
+async function validaPix(pix, tipo) {
     let valida = new Object()
     let aleatorio
     valida.pix = pix
     switch (tipo) {
         case "cpf":
-            valida.validador = Framework.ValidarDado(tipo, pix)
+            valida.validador = await Framework.ValidarDado(tipo, pix)
             return valida
         case "cnpj":
-            valida.validador = Framework.ValidarDado(tipo, pix)
+            valida.validador = await Framework.ValidarDado(tipo, pix)
             return valida
         case "email":
-            valida.validador = Framework.ValidarDado(tipo, pix)
+            valida.validador = await Framework.ValidarDado(tipo, pix)
             return valida
         case "telefone":
             valida.validador = validator(pix)

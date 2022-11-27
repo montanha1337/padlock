@@ -17,8 +17,8 @@ async function inserir(IdUser, nome, pixNovo, tipo) {
     let inserir = new Object()
     let pix = new Object()
     let valida = PixControl.validaPix(pixNovo, tipo)
-    if (valida.Validador.status != 200)
-        return valida.Validador
+    if (valida.validador.status != 200)
+        return valida.validador
 
     pixNovo = await Framework.ManipularDado("encripta", pixNovo)
     IdUser = await Framework.ManipularToken("dev-retornaId", IdUser)
@@ -41,9 +41,9 @@ async function adicionarPix(IdUser, nome, pixNovo, tipo) {
     let pix = new Object()
     let valida = PixControl.validaPix(pixNovo, tipo)
     inserir.result = true
-    
-    if (valida.Validador.status != 200)
-        return valida.Validador
+
+    if (valida.validador.status != 200)
+        return valida.validador
     
     pixNovo = await Framework.ManipularDado("encripta", pixNovo)
     IdUser = await Framework.ManipularToken("dev-retornaId", IdUser)
